@@ -1,0 +1,8 @@
+//Rascunho
+
+-> usado para testar a geração de caracteres aleatórios
+    /*for (i <- 1 to 28) { // tem de ser 28 por causa do algoritmo de geração de caracteres aleatórios , que repete o J e o S
+      val rand = MyRandom(i)
+      val (char, newRand) = gameLogic.randomChar(rand)
+      println(char)
+    }*/
