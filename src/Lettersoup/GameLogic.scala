@@ -1,22 +1,21 @@
 package Lettersoup
 
-class GameLogic {
+import Lettersoup.UtilStuff.{Board, Coord2D}
 
-  //T1 - function that generates a random character
-  def randomChar(rand: MyRandom): (Char, MyRandom) = {
-    val (nextInt, newRand) = rand.nextInt(26) // Gera um número aleatório entre 0 e 26
-    val randomChar = ('A' + nextInt).toChar // Converte o número para um caractere entre 'A' e 'Z'
-    (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
+object GameLogic {
+
+  //T2 - function that associates a random char to a coordinate
+  def fillOneCell(board: Board, coord: Coord2D, char: Char): Board = {
+    if (coord._1 < 0 || coord._1 >= board.length || coord._2 < 0 || coord._2 >= board(0).length || char > 'Z' || char < 'A') {
+      //se tiver fora do tabuleiro ou não for um char válido, retorna o tabuleiro sem alterações
+      board
+    } else {
+      board.updated(coord._1, board(coord._1).updated(coord._2, char))
+    }
   }
 
 }
 object TestGameLogic {
   def main(args: Array[String]): Unit = {
-
-    //test T1
-    val gameLogic = new GameLogic()
-    val rand = MyRandom(21) // para o output mudar a cada execução, só usar System.currentTimeMillis() na seed
-    val (char, _) = gameLogic.randomChar(rand)
-    println(char)
   }
 }

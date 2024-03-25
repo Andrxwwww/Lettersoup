@@ -1,6 +1,7 @@
 package Lettersoup
 
-class Util {
+object UtilStuff {
+
   type Board = List[List[Char]]
   type Coord2D = (Int, Int) //(row, column)
 
