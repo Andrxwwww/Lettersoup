@@ -38,6 +38,7 @@
       printBoard(tail)
   }
 
+
   * Main func for it ->
      val gameLogic = new GameLogic
      val rand = MyRandom(41)
