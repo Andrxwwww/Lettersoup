@@ -13,7 +13,6 @@ object GameLogic {
       board.updated(coord._1, board(coord._1).updated(coord._2, char))
     }
   }
-
 }
 object TestGameLogic {
   def main(args: Array[String]): Unit = {
