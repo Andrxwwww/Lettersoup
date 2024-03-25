@@ -1,5 +1,6 @@
 package Lettersoup
 
+//T1 - Pure API for random number generation
 trait RandomWithState {
   def nextInt(): (Int, RandomWithState)
   def nextInt(n: Int): (Int, RandomWithState)

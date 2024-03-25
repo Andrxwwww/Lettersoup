@@ -1,13 +1,13 @@
 //Rascunho
 
--> usado para testar a geração de caracteres aleatórios
+-> usado para testar a geração de caracteres aleatórios - T1
     /*for (i <- 1 to 28) { // tem de ser 28 por causa do algoritmo de geração de caracteres aleatórios , que repete o J e o S
       val rand = MyRandom(i)
       val (char, newRand) = gameLogic.randomChar(rand)
       println(char)
     }*/
 
--> usado para testar a geração de palavras aleatórias
+-> usado para testar a geração de palavras aleatórias - T1
 
     //test T1
     val gameLogic = new GameLogic()
@@ -16,7 +16,7 @@
     val (char, _) = gameLogic.randomChar(rand)
     println(char)
 
--> usado para testar a fazer uma board com n*n tamanho com char aleatorios
+-> usado para testar a fazer uma board com n*n tamanho com char aleatorios - T1.5
 
   //T - test function
   def generateBoard(n: Int, rand: MyRandom): Board = {
@@ -38,8 +38,29 @@
       printBoard(tail)
   }
 
+
   * Main func for it ->
      val gameLogic = new GameLogic
      val rand = MyRandom(41)
      val board = gameLogic.generateBoard(5, rand)
      gameLogic.printBoard(board)
+
+-> usado para testar a funcao de dar return de uma palavra aleatoria de um .txt file
+
+    object TestBackUtilFunc {
+        def main(args: Array[String]): Unit = {
+        val backUtil = new BackUtil
+        val word = backUtil.randomWord("src/Lettersoup/Palavras.txt")
+        print(word)
+        }
+    }
+
+-> codigo teste usado para testar se a sequencia de coordenadas é valida para depois mais tarde associar um char
+
+    val rand = MyRandom(System.currentTimeMillis())
+    val gameLogic = new GameLogic
+    val board = List.fill(5,5)('-')
+    println(board.map(_.mkString(" ")).mkString("\n"))
+    println(" ")
+    println("Random coordinate -> " + randomCoord( rand , board)._1)
+    println("Possible Sequence for it -> " + listSequence(board, randomCoord( rand , board)._1, 4))
