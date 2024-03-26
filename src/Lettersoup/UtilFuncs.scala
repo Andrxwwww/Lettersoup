@@ -34,12 +34,13 @@ object UtilFuncs {
         val numbers = coordString.stripPrefix("(").stripSuffix(")").split(',')
         (numbers(0).toInt,numbers(1).toInt)
       }.toList
+
       (word, coords)
     }
-
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
+
 
   //T4 - function that return a char which is not contained in a list of Strings
   def randomCharNotInList(list: List[String]): MyRandom => (Char, MyRandom) = {

@@ -5,7 +5,9 @@ import Lettersoup.UtilFuncs.{getWordsAndCoords,randomCharNotInList}
 
 object Main {
   def main(args: Array[String]): Unit = {
-    //TO-DO: METER CONSTANTE PARA QUANTITY_OF_WORDS
+
+    val QUANTITY_OF_WORDS = 2
+
     val gameLogic = new GameLogic
     val rand = MyRandom(System.currentTimeMillis())
     val board = List.fill(5,5)('-')
@@ -15,7 +17,7 @@ object Main {
     println(board.map(_.mkString(" ")).mkString("\n"))
 
     //print the words and the sequence of coordinates from the file
-    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt",2)
+    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", QUANTITY_OF_WORDS)
     println("Words-> " + infos._1)
     println("Coords-> " + infos._2)
 
@@ -34,6 +36,6 @@ object Main {
     //check the board
     println(" ")
     println("Check the board:")
-    println(gameLogic.checkBoard(boardWithRandomChars, "src/Lettersoup/Palavras.txt" ,2))
+    println(gameLogic.checkBoard(boardWithRandomChars, infos._1, QUANTITY_OF_WORDS))
   }
 }

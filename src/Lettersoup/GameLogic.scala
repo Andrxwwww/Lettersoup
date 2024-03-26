@@ -44,15 +44,13 @@ class GameLogic {
       }
   }
 
-  //T6 - function that checks that the words are in the board
-  def checkBoard(board: Board , filename: String , n: Int): Boolean = {
-    val wordsToFind = getWordsAndCoords(filename , n)._1 // Obter todas as palavras do board
-    val charsOnBoard = board.flatten.filter(_ != '-') // Obter todos os caracteres no tabuleiro
-    val charsToFind = wordsToFind.flatMap(_.toList) // Converter a lista de palavras para uma lista de caracteres
-    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length // Verificar se nenhuma das palavras fornecidas está duplicada
-    val commonChars = charsOnBoard.intersect(charsToFind) // Obter os caracteres que estão tanto em charsOnBoard quanto em charsToFind
-    val correctQuantity = commonChars.length == charsToFind.length // Verificar se a quantidade de caracteres comuns é igual à quantidade de caracteres nas palavras fornecidas
-    noDuplicates && correctQuantity
+  //T6 - function that checks that the words are in the board TODO: check if the words are inbounds of the board
+  def checkBoard(board: Board , wordsToFind: List[String] , n: Int): Boolean = {
+    val charsOnBoard = board.flatten.filter(_ != '-')
+    val charsToFind = wordsToFind.flatMap(_.toList)
+    val commonChars = charsOnBoard.filter(charsToFind.contains)
+    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
+    commonChars.length == charsToFind.length && noDuplicates
   }
 
 }
