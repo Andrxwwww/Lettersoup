@@ -64,3 +64,23 @@
     println(" ")
     println("Random coordinate -> " + randomCoord( rand , board)._1)
     println("Possible Sequence for it -> " + listSequence(board, randomCoord( rand , board)._1, 4))
+
+-> old main func :
+
+        println(" ")
+        val listWords = listOfWordsAndIsSize("src/Lettersoup/Palavras.txt")
+
+        val possibleSequence = listSequence(board, listOfRandomCoords(rand,board,listWords._1.length) ,listWords._2)
+        println("Random words -> " + listWords)
+        println("Random coordinate -> " + listOfRandomCoords(rand,board,listWords._1.length))
+        println("Possible Sequence for it -> " + possibleSequence)
+
+        val BoardWithWord = gameLogic.setBoardWithWords(board, listWords._1, possibleSequence)
+        println(" ")
+        println("Board with the word:")
+        println(BoardWithWord.map(_.mkString(" ")).mkString("\n"))
+
+        val boardCompleted = gameLogic.completeBoardRandomly(BoardWithWord, rand, MyRandom => (randomChar(MyRandom)._1, MyRandom))._1
+        println(" ")
+        println("Board completed:")
+        println(boardCompleted.map(_.mkString(" ")).mkString("\n"))

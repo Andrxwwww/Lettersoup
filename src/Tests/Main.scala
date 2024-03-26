@@ -1,7 +1,7 @@
 package Tests
 
 import Lettersoup.{GameLogic, MyRandom}
-import Lettersoup.UtilFuncs.{listOfWords, listSequence, randomChar, randomCoord}
+import Lettersoup.UtilFuncs.{getWordsAndCoords}
 
 object TestGameLogic {
   def main(args: Array[String]): Unit = {
@@ -9,27 +9,25 @@ object TestGameLogic {
     val rand = MyRandom(System.currentTimeMillis())
     val board = List.fill(5,5)('-')
 
+    //print the board
     println("Board:")
     println(board.map(_.mkString(" ")).mkString("\n"))
 
-    println(" ")
-    val words = listOfWords("src/Lettersoup/Palavras.txt")
+    //print the words and the sequence of coordinates from the file
+    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt")
+    println("Words-> " + infos._1)
+    println("Coords-> " + infos._2)
 
-    val randomWord = words(rand.nextInt(words.length)._1)
-    val randomcoord = randomCoord( rand , board)
-    val possibleSequence = listSequence(board, randomcoord._1, randomWord.length)
-    println("Random word -> " + randomWord)
-    println("Random coordinate -> " + randomcoord._1)
-    println("Possible Sequence for it -> " + possibleSequence)
-
-    val BoardWithWord = gameLogic.setBoardWithWords(board, possibleSequence, randomWord)
+    //print the board with the words
+    val boardWithWords = gameLogic.setBoardWithWords(board, infos._1, infos._2)
     println(" ")
-    println("Board with the word:")
-    println(BoardWithWord.map(_.mkString(" ")).mkString("\n"))
+    println("Board with words:")
+    println(boardWithWords.map(_.mkString(" ")).mkString("\n"))
 
-    val boardCompleted = gameLogic.completeBoardRandomly(BoardWithWord, rand, MyRandom => (randomChar(MyRandom)._1, MyRandom))._1
+    //print the board with the words + random chars
+    val boardWithRandomChars = gameLogic.completeBoardRandomly(boardWithWords, rand, gameLogic.randomChar)._1
     println(" ")
-    println("Board completed:")
-    println(boardCompleted.map(_.mkString(" ")).mkString("\n"))
+    println("Board with random chars + words:")
+    println(boardWithRandomChars.map(_.mkString(" ")).mkString("\n"))
   }
 }
