@@ -1,7 +1,8 @@
 package Lettersoup
 
 import Lettersoup.UtilStuff.{Board, Coord2D}
-import Lettersoup.UtilFuncs.{randomCoord}
+import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCoord}
+
 // class for the game logic
 class GameLogic {
 
@@ -13,8 +14,8 @@ class GameLogic {
   }
 
   //T2 - function that associates a random char to a coordinate
-  def fillOneCell(board: Board, coord: Coord2D, char: Char): Board = {
-    if (coord._1 < 0 || coord._1 >= board.length || coord._2 < 0 || coord._2 >= board(0).length || char == '-' ) {
+  private def fillOneCell(board: Board, coord: Coord2D, char: Char): Board = {
+    if (coord._1 < 0 || coord._1 >= board.length || coord._2 < 0 || coord._2 >= board.head.length || char == '-' ) {
       //se tiver fora do tabuleiro ou não for um char válido, retorna o tabuleiro sem alterações
       board
     } else {
@@ -41,6 +42,17 @@ class GameLogic {
       } else {
         (board, r)
       }
+  }
+
+  //T6 - function that checks that the words are in the board
+  def checkBoard(board: Board , filename: String , n: Int): Boolean = {
+    val wordsToFind = getWordsAndCoords(filename , n)._1 // Obter todas as palavras do board
+    val charsOnBoard = board.flatten.filter(_ != '-') // Obter todos os caracteres no tabuleiro
+    val charsToFind = wordsToFind.flatMap(_.toList) // Converter a lista de palavras para uma lista de caracteres
+    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length // Verificar se nenhuma das palavras fornecidas está duplicada
+    val commonChars = charsOnBoard.intersect(charsToFind) // Obter os caracteres que estão tanto em charsOnBoard quanto em charsToFind
+    val correctQuantity = commonChars.length == charsToFind.length // Verificar se a quantidade de caracteres comuns é igual à quantidade de caracteres nas palavras fornecidas
+    noDuplicates && correctQuantity
   }
 
 }

@@ -1,6 +1,8 @@
 package Lettersoup
 
-import Lettersoup.UtilStuff.{Board, Coord2D, DirectionVector}
+import Lettersoup.UtilStuff.{Board, Coord2D}
+
+import scala.annotation.tailrec
 import scala.io.Source
 
 
@@ -8,9 +10,10 @@ import scala.io.Source
 object UtilFuncs {
 
   //TA (Tarefa Auxiliar) - function that generates a random coordinate
+  @tailrec
   def randomCoord(rand: MyRandom, board: Board): (Coord2D, MyRandom) = {
     val (nextIntRow, newRandRow) = rand.nextInt(board.length) // Gera um número aleatório entre 0 e o número de linhas do tabuleiro
-    val (nextIntCol, newRandCol) = newRandRow.nextInt(board(0).length) // Gera um número aleatório entre 0 e o número de colunas do tabuleiro
+    val (nextIntCol, newRandCol) = newRandRow.nextInt(board.head.length) // Gera um número aleatório entre 0 e o número de colunas do tabuleiro
     if (board(nextIntRow)(nextIntCol) != '-')
       randomCoord(newRandCol, board) // Se a célula já estiver preenchida, chama a função recursivamente
     else
@@ -18,9 +21,12 @@ object UtilFuncs {
   }
 
   //TA - function that returns a List of words from a .txt file + a sequence of coordinates for put in the word
-  def getWordsAndCoords(filename: String): (List[String], List[List[Coord2D]]) = {
+  def getWordsAndCoords(filename: String, n: Int): (List[String], List[List[Coord2D]]) = {
     val lines = Source.fromFile(filename).getLines().toList
-    val wordsAndCoords = lines.map { line =>
+    val r = MyRandom(System.currentTimeMillis())
+    val randomLines = r.shuffle(lines).take(n)
+
+    val wordsAndCoords = randomLines.map { line =>
       val info = line.split('-')
       val word = info(0) // retira a palavra
       val coordStrings = info(1).split('_') // retira as coordenadas
@@ -30,8 +36,22 @@ object UtilFuncs {
       }.toList
       (word, coords)
     }
+
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
+
+  //T4 - function that return a char which is not contained in a list of Strings
+  def randomCharNotInList(list: List[String]): MyRandom => (Char, MyRandom) = {
+    rand: MyRandom => {
+      val (char, newRand) = rand.nextInt(26) // Gera um número aleatório entre 0 e 26
+      val randomChar = ('A' + char).toChar // Converte o número para um caractere entre 'A' e 'Z'
+      if (list.flatten.contains(randomChar))
+        randomCharNotInList(list)(newRand) // Se o caractere já estiver na lista, chama a função recursivamente
+      else
+        (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
+    }
+  }
+
 
 }
