@@ -1,7 +1,8 @@
 package Lettersoup
 
-import Lettersoup.UtilStuff.{Board, Coord2D}
-import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCoord}
+import Lettersoup.UtilFuncs.directionToCoord
+import Lettersoup.UtilStuff.{Board, Coord2D, Direction}
+import Lettersoup.UtilStuff.Direction.Direction
 
 // class for the game logic
 class GameLogic {
@@ -32,25 +33,67 @@ class GameLogic {
     }
   }
 
-  //T4 - function that completes the board with random chars
-  def completeBoardRandomly(board:Board, r:MyRandom, f: MyRandom => (Char, MyRandom)):(Board, MyRandom) = {
-      if (board.flatten.contains('-')) {
-        val (char, newRand) = f(r)
-        val (coord, newRandCoord) = randomCoord(newRand, board)
-        val newBoard = fillOneCell(board, coord, char)
-        completeBoardRandomly(newBoard, newRandCoord, f)
-      } else {
-        (board, r)
+  //T4 - function that completes the board with random chars [other part of T4 is in UtilFuncs for use in f param]
+  def completeBoardRandomly(board: Board, r: MyRandom, f: MyRandom => (Char, MyRandom)): (Board, MyRandom) = {
+    val (newBoard, newRand) = board.indices.foldLeft((board, r)) { case ((b, rand), i) =>
+      b(i).indices.foldLeft((b, rand)) { case ((bb, rrand), j) =>
+        if (bb(i)(j) == '-') {
+          val (char, newRand) = f(rrand)
+          (fillOneCell(bb, (i, j), char), newRand)
+        } else (bb, rrand)
       }
+    }
+    (newBoard, newRand)
+  }
+  //T5 - function that checks if a word is in the board
+  private def play(board: Board, word: String, coordInitial: Coord2D, direction: Direction): Boolean = {
+    val wordList = word.toList
+    if (board(coordInitial._1)(coordInitial._2) == wordList.head
+      && board(coordInitial._1 + directionToCoord(direction)._1)(coordInitial._2 + directionToCoord(direction)._2) == wordList(1)){
+      true
+    } else {
+      false
+    }
   }
 
-  //T6 - function that checks that the words are in the board TODO: check if the words are inbounds of the board
-  def checkBoard(board: Board , wordsToFind: List[String] , n: Int): Boolean = {
+  //T6 - function that checks that the words are in the board
+  def checkBoard(board: Board , wordsToFind: List[String]): Boolean = {
     val charsOnBoard = board.flatten.filter(_ != '-')
     val charsToFind = wordsToFind.flatMap(_.toList)
     val commonChars = charsOnBoard.filter(charsToFind.contains)
     val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
+
     commonChars.length == charsToFind.length && noDuplicates
+  }
+
+  //TA- function that input a word in board with a initial coord and a direction
+  def runGame(board: Board): Unit = {
+    print("Insert a word: ")
+    val word = scala.io.StdIn.readLine().toUpperCase
+    if ( word == "EXIT") return
+    if ( word == "RESTART") runGame(board)
+    print("Insert a coord -> x,y: ")
+    val coord = scala.io.StdIn.readLine()
+    val coords = coord.split(",")
+    val coord2D = (coords(0).toInt,coords(1).toInt)
+    print("Insert a direction: ")
+    val direction = scala.io.StdIn.readLine()
+    val dir = direction match {
+      case "N" => Direction.North
+      case "S" => Direction.South
+      case "E" => Direction.East
+      case "W" => Direction.West
+      case "NE" => Direction.NorthEast
+      case "NW" => Direction.NorthWest
+      case "SE" => Direction.SouthEast
+      case "SW" => Direction.SouthWest
+    }
+    if (play(board,word,coord2D,dir)){
+      println("The word is in the board")
+    } else {
+      println("The word is not in the board , please try again :(")
+      runGame(board)
+    }
   }
 
 }

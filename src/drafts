@@ -65,7 +65,7 @@
     println("Random coordinate -> " + randomCoord( rand , board)._1)
     println("Possible Sequence for it -> " + listSequence(board, randomCoord( rand , board)._1, 4))
 
--> old main func :
+-> old main func [v1] :
 
         println(" ")
         val listWords = listOfWordsAndIsSize("src/Lettersoup/Palavras.txt")
@@ -84,3 +84,9 @@
         println(" ")
         println("Board completed:")
         println(boardCompleted.map(_.mkString(" ")).mkString("\n"))
+
+-> old main func [v2] :
+
+    //print the board
+    println("Board:")
+    println(board.map(_.mkString(" ")).mkString("\n"))

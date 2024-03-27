@@ -1,24 +1,13 @@
 package Lettersoup
 
-import Lettersoup.UtilStuff.{Board, Coord2D}
+import Lettersoup.UtilStuff.Direction.Direction
+import Lettersoup.UtilStuff.{Coord2D, Direction}
 
-import scala.annotation.tailrec
 import scala.io.Source
 
 
 // class for make some function that are util for the game but they are not associated directly with the game logic
 object UtilFuncs {
-
-  //TA (Tarefa Auxiliar) - function that generates a random coordinate
-  @tailrec
-  def randomCoord(rand: MyRandom, board: Board): (Coord2D, MyRandom) = {
-    val (nextIntRow, newRandRow) = rand.nextInt(board.length) // Gera um número aleatório entre 0 e o número de linhas do tabuleiro
-    val (nextIntCol, newRandCol) = newRandRow.nextInt(board.head.length) // Gera um número aleatório entre 0 e o número de colunas do tabuleiro
-    if (board(nextIntRow)(nextIntCol) != '-')
-      randomCoord(newRandCol, board) // Se a célula já estiver preenchida, chama a função recursivamente
-    else
-      ((nextIntRow, nextIntCol), newRandCol) // Retorna a coordenada aleatória e o novo estado do gerador de números aleatórios
-  }
 
   //TA - function that returns a List of words from a .txt file + a sequence of coordinates for put in the word
   def getWordsAndCoords(filename: String, n: Int): (List[String], List[List[Coord2D]]) = {
@@ -53,6 +42,21 @@ object UtilFuncs {
         (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
     }
   }
+
+  //TA - function that associates a coord. diretion vector to a Direction
+  def directionToCoord(direction: Direction): Coord2D = {
+    direction match {
+      case Direction.North => (-1, 0)
+      case Direction.South => (1, 0)
+      case Direction.East => (0, 1)
+      case Direction.West => (0, -1)
+      case Direction.NorthEast => (-1, 1)
+      case Direction.NorthWest => (-1, -1)
+      case Direction.SouthEast => (1, 1)
+      case Direction.SouthWest => (1, -1)
+    }
+  }
+
 
 
 }
