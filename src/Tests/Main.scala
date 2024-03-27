@@ -12,18 +12,24 @@ object Main {
     val rand = MyRandom(5)
     val board = List.fill(5, 5)('-')
 
-    //print the words and the sequence of coordinates from the file
+    println(" ")
+    println("NW N NE")
+    println("W  *  E")
+    println("SW S SE")
+    println(" ")
+
+    //words and the sequence of coordinates from the file
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", QUANTITY_OF_WORDS)
-    //print the board with the words
+    //board with the words
     val boardWithWords = gameLogic.setBoardWithWords(board, infos._1, infos._2)
-    //print the board with the words + random chars
+    //board with the words + random chars
     val boardWithRandomChars = gameLogic.completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
     if (gameLogic.checkBoard(boardWithRandomChars, infos._1)) {
       println("---LETTERSOUP---")
       print("   ")
       println(boardWithRandomChars.map(_.mkString(" ")).mkString("\n   "))
       println(" ")
-      gameLogic.runGame(boardWithRandomChars)
+      gameLogic.runGame(boardWithRandomChars , infos._1)
     } else {
       println("The game not loaded correctly :(")
     }

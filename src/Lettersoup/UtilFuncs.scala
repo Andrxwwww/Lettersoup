@@ -10,6 +10,7 @@ import scala.io.Source
 object UtilFuncs {
 
   //TA - function that returns a List of words from a .txt file + a sequence of coordinates for put in the word
+  // format -> WORD-(x1,y1)_(x2,y2)_(x3,y3)...
   def getWordsAndCoords(filename: String, n: Int): (List[String], List[List[Coord2D]]) = {
     val lines = Source.fromFile(filename).getLines().toList
     val r = MyRandom(System.currentTimeMillis())
