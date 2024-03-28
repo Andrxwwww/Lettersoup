@@ -27,7 +27,7 @@ object MyRandom {
     shuffleAux(list, r)._1
   }
 
-  def shuffleAux (list: List[String], r: MyRandom): (List[String], MyRandom ) = {
+  private def shuffleAux(list: List[String], r: MyRandom): (List[String], MyRandom ) = {
     if (list.isEmpty) (List(), r)
     else {
       val (index, newRand) = r.nextInt(list.length)

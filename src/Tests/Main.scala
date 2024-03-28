@@ -1,35 +1,32 @@
 package Tests
 
-import Lettersoup.{GameLogic, MyRandom}
+import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, setBoardWithWords}
+import Lettersoup.GameStates.runGame
+import Lettersoup.MyRandom
 import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCharNotInList}
 
 object Main {
   def main(args: Array[String]): Unit = {
 
     val QUANTITY_OF_WORDS = 2
-
-    val gameLogic = new GameLogic
     val rand = MyRandom(5)
     val board = List.fill(5, 5)('-')
+    val wordFound = 0
 
-    println(" ")
-    println("NW N NE")
-    println("W  *  E")
-    println("SW S SE")
-    println(" ")
+    println(Console.BLUE + " now it's really blue!" + Console.RESET)
 
     //words and the sequence of coordinates from the file
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", QUANTITY_OF_WORDS)
     //board with the words
-    val boardWithWords = gameLogic.setBoardWithWords(board, infos._1, infos._2)
+    val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
     //board with the words + random chars
-    val boardWithRandomChars = gameLogic.completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
-    if (gameLogic.checkBoard(boardWithRandomChars, infos._1)) {
+    val boardWithRandomChars = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
+    if (checkBoard(boardWithRandomChars, infos._1)) {
       println("---LETTERSOUP---")
       print("   ")
       println(boardWithRandomChars.map(_.mkString(" ")).mkString("\n   "))
       println(" ")
-      gameLogic.runGame(boardWithRandomChars , infos._1)
+      runGame(boardWithRandomChars , infos._1 , wordFound)
     } else {
       println("The game not loaded correctly :(")
     }

@@ -1,11 +1,11 @@
 package Lettersoup
 
 import Lettersoup.UtilFuncs.directionToCoord
-import Lettersoup.UtilStuff.{Board, Coord2D, Direction}
+import Lettersoup.UtilStuff.{Board, Coord2D}
 import Lettersoup.UtilStuff.Direction.Direction
 
 // class for the game logic
-class GameLogic {
+object GameLogic {
 
   //T1 - function that generates a random char
   def randomChar(rand: MyRandom): (Char, MyRandom) = {
@@ -46,10 +46,16 @@ class GameLogic {
     (newBoard, newRand)
   }
   //T5 - function that checks if a word is in the board
-  private def play(board: Board, word: String, coordInitial: Coord2D, direction: Direction): Boolean = {
+  def play(board: Board, word: String, coordInitial: Coord2D, direction: Direction , list: List[String]): Boolean = {
     val wordList = word.toList
+    val newX = coordInitial._1 + directionToCoord(direction)._1
+    val newY = coordInitial._2 + directionToCoord(direction)._2
+    if ( newX < 0 || newX >= board.length || newY < 0 || newY >= board.head.length){
+      return false
+    }
     if (board(coordInitial._1)(coordInitial._2) == wordList.head
-      && board(coordInitial._1 + directionToCoord(direction)._1)(coordInitial._2 + directionToCoord(direction)._2) == wordList(1)){
+      && board(newX)(newY) == wordList(1)
+      && list.contains(word)){
       true
     } else {
       false
@@ -64,37 +70,6 @@ class GameLogic {
     val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
 
     commonChars.length == charsToFind.length && noDuplicates
-  }
-
-  //TA- function that input a word in board with a initial coord and a direction
-  def runGame(board: Board,list: List[String]): Unit = {
-    print("Insert a word: ")
-    val word = scala.io.StdIn.readLine().toUpperCase
-    if ( word == "EXIT") return
-    if ( word == "RESTART") runGame(board,list)
-
-      print("Insert a coord -> x,y: ")
-      val coord = scala.io.StdIn.readLine()
-      val coords = coord.split(",")
-      val coord2D = (coords(0).toInt, coords(1).toInt)
-      print("Insert a direction: ")
-      val direction = scala.io.StdIn.readLine()
-      val dir = direction match {
-        case "N" => Direction.North
-        case "S" => Direction.South
-        case "E" => Direction.East
-        case "W" => Direction.West
-        case "NE" => Direction.NorthEast
-        case "NW" => Direction.NorthWest
-        case "SE" => Direction.SouthEast
-        case "SW" => Direction.SouthWest
-      }
-      if (play(board, word, coord2D, dir) && list.contains(word)) {
-        println("The word is in the board")
-      } else {
-        println("The word is not in the board , please try again :(")
-        runGame(board , list)
-      }
   }
 
 }

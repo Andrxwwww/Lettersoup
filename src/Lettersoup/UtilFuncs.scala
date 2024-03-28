@@ -31,7 +31,6 @@ object UtilFuncs {
     (words, coordLists)
   }
 
-
   //T4 - function that return a char which is not contained in a list of Strings
   def randomCharNotInList(list: List[String]): MyRandom => (Char, MyRandom) = {
     rand: MyRandom => {
@@ -55,6 +54,20 @@ object UtilFuncs {
       case Direction.NorthWest => (-1, -1)
       case Direction.SouthEast => (1, 1)
       case Direction.SouthWest => (1, -1)
+    }
+  }
+
+  //TA - function that associates a string to a Direction
+  def stringToDirection(direction: String): Direction = {
+    direction match {
+      case "N" => Direction.North
+      case "S" => Direction.South
+      case "E" => Direction.East
+      case "W" => Direction.West
+      case "NE" => Direction.NorthEast
+      case "NW" => Direction.NorthWest
+      case "SE" => Direction.SouthEast
+      case "SW" => Direction.SouthWest
     }
   }
 
