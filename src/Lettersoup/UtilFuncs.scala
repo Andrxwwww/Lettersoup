@@ -30,7 +30,7 @@ object UtilFuncs {
     val filteredLines = lines.filter { line =>
       val (_, coords) = parseLine(line)
       // Check if any coordinate is greater than boardSize
-      !coords.exists(coord => coord._1 >= boardSize || coord._2 >= boardSize)
+      !coords.exists(coord => coord._1 >= boardSize && coord._2 >= boardSize)
     }
 
     // checks if there is no coordinates repeated [for not superimpose words]
@@ -49,7 +49,7 @@ object UtilFuncs {
     }
 
     val randomLines = shuffleLines(filteredLines)
-    val wordsAndCoords = randomLines.map(parseLine)
+    val wordsAndCoords = randomLines.map(parseLine).take(n)
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
