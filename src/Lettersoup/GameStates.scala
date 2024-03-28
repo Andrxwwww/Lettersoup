@@ -51,7 +51,11 @@ object GameStates {
     val rand = MyRandom(System.currentTimeMillis())
     val wordsFound = 0
     val (numWords, board) = startGame()
-    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords)
+    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords , board.length)
+    if (infos._1.isEmpty && infos._2.isEmpty) {
+      println("There is no words for this size board :( , please insert a bigger board size.")
+      loadGame()
+    }
     val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
     val gameBoard = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
 

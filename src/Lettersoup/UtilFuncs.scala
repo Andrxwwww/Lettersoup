@@ -11,12 +11,11 @@ object UtilFuncs {
 
   //TA - function that returns a List of words from a .txt file + a sequence of coordinates for put in the word
   // format -> WORD-(x1,y1)_(x2,y2)_(x3,y3)...
-  def getWordsAndCoords(filename: String, n: Int): (List[String], List[List[Coord2D]]) = {
+  def getWordsAndCoords(filename: String, n: Int , boardSize: Int): (List[String], List[List[Coord2D]]) = {
     val lines = Source.fromFile(filename).getLines().toList
     val r = MyRandom(System.currentTimeMillis())
-    val randomLines = r.shuffle(lines).take(n)
 
-    val wordsAndCoords = randomLines.map { line =>
+    def parseLine(line: String): (String, List[Coord2D]) = {
       val info = line.split('-')
       val word = info(0) // retira a palavra
       val coordStrings = info(1).split('_') // retira as coordenadas
@@ -24,12 +23,38 @@ object UtilFuncs {
         val numbers = coordString.stripPrefix("(").stripSuffix(")").split(',')
         (numbers(0).toInt,numbers(1).toInt)
       }.toList
-
       (word, coords)
     }
+
+    // checks if there is no coordinates greater than boardSize
+    val filteredLines = lines.filter { line =>
+      val (_, coords) = parseLine(line)
+      // Check if any coordinate is greater than boardSize
+      !coords.exists(coord => coord._1 >= boardSize || coord._2 >= boardSize)
+    }
+
+    // checks if there is no coordinates repeated [for not superimpose words]
+    def shuffleLines(lines: List[String], usedCoords: Set[Coord2D] = Set()): List[String] = {
+      if (lines.isEmpty || usedCoords.size == n) {
+        List()
+      } else {
+        val line = r.shuffle(lines).head
+        val (_, coords) = parseLine(line)
+        if (coords.exists(usedCoords.contains)) {
+          shuffleLines(lines.filterNot(_ == line), usedCoords)
+        } else {
+          line :: shuffleLines(lines.filterNot(_ == line), usedCoords ++ coords)
+        }
+      }
+    }
+
+    val randomLines = shuffleLines(filteredLines)
+    val wordsAndCoords = randomLines.map(parseLine)
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
+
+
 
   //T4 - function that return a char which is not contained in a list of Strings
   def randomCharNotInList(list: List[String]): MyRandom => (Char, MyRandom) = {

@@ -16,7 +16,7 @@ object Main {
     println(Console.BLUE + " now it's really blue!" + Console.RESET)
 
     //words and the sequence of coordinates from the file
-    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", QUANTITY_OF_WORDS)
+    val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", QUANTITY_OF_WORDS , board.length)
     //board with the words
     val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
     //board with the words + random chars
