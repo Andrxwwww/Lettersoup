@@ -22,6 +22,7 @@ object MyRandom {
     (if (nn < 0) -nn else nn, nextRandom)
   }
 
+  //TA - function that shuffles a list of strings
   def shuffle (list: List[String], seed: Long): List[String] = {
     val r = MyRandom(seed)
     shuffleAux(list, r)._1

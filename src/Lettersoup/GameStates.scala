@@ -5,14 +5,10 @@ import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCharNotInList, stringToDir
 import Lettersoup.UtilStuff.Board
 
 import scala.annotation.tailrec
-
 object GameStates {
 
   //TA - function that makes the menu of the game
   def mainLoop(): Unit = {
-    println(" ")
-    println("----WELCOME TO THE LETTERSOUP GAME----")
-    println(" ")
     println("1.Play")
     println("2.Settings")
     println("3.Exit")
@@ -31,11 +27,12 @@ object GameStates {
         println("See you next time!")
         System.exit(0)
       }
-      case _ => println("Invalid option")
+      case _ => println("Invalid option \n")
+      mainLoop()
     }
   }
 
-  //T-CASE1 - function for start the game
+  //TUI1 - function for start the game
   private def startGame(): (Int,List[List[Char]]) = {
     println(" ")
     print("Insert the size of the board: ")
@@ -48,7 +45,7 @@ object GameStates {
     (QUANTITY_OF_WORDS,board)
   }
 
-  //T-CASE1 - function that loads the game
+  //TUI2 - function that loads the game
   private def loadGame(): Unit = {
     val rand = MyRandom(System.currentTimeMillis())
     val wordsFound = 0
@@ -76,7 +73,7 @@ object GameStates {
     }
   }
 
-  //T-CASE1 - function for run the game
+  //TUI3 - function for run the game
   @tailrec
   def runGame(board: Board, list: List[String], wordsFound: Int = 0): Unit = {
     print("Insert a word: ")
