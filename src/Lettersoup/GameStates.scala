@@ -5,6 +5,8 @@ import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCharNotInList, stringToDir
 import Lettersoup.UtilStuff.Board
 
 import scala.annotation.tailrec
+
+// class for make the TUI of the game
 object GameStates {
 
   //TA - function that makes the menu of the game
@@ -21,7 +23,7 @@ object GameStates {
         loadGame()
       }
       case "2" => {
-        println("Settings")
+        loadSettings()
       }
       case "3" => {
         println("See you next time!")
@@ -47,7 +49,7 @@ object GameStates {
 
   //TUI2 - function that loads the game
   private def loadGame(): Unit = {
-    val rand = MyRandom(System.currentTimeMillis())
+    val rand = MyRandom(3) //TODO: change the seed for being impured
     val wordsFound = 0
     val (numWords, board) = startGame()
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords , board.length)
@@ -72,7 +74,7 @@ object GameStates {
       startGame()
     }
   }
-
+  //todo:my random em um ficheiro
   //TUI3 - function for run the game
   @tailrec
   def runGame(board: Board, list: List[String], wordsFound: Int = 0): Unit = {
@@ -101,6 +103,31 @@ object GameStates {
     }
   }
 
+  private def loadSettings(): Unit = {
+    println(" ")
+    println("1. Change the color of the words")
+    println("2. back")
+    println(" ")
+    print("Choose an option: ")
+    val option = scala.io.StdIn.readLine()
+    option match {
+      case "1" => {
+        println(" ")
+        print("Insert the color: ")
+        val color = scala.io.StdIn.readLine()
+        changeConsoleColor(color)
+        println("Your color is now " + color)
+        println(" ")
+        mainLoop()
+      }
+      case "2" => {
+        mainLoop()
+      }
+      case _ => println("Invalid option \n")
+        loadSettings()
+    }
+  }
+
   private def winGame(): Unit = {
     println("Congratulations! You found all the words!")
     println("Do you want to play again? (y/n)")
@@ -110,6 +137,17 @@ object GameStates {
       case "n" => mainLoop()
       case _ => println("Invalid option")
     }
+  }
+
+  def changeConsoleColor(color: String): Unit = {
+    val colorCode = color.toLowerCase match {
+      case "red" => "\u001B[31m"
+      case "green" => "\u001B[32m"
+      case "yellow" => "\u001B[33m"
+      case "blue" => "\u001B[34m"
+      case _ => "\u001B[0m"
+    }
+    println(colorCode)
   }
 
 

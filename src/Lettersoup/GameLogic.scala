@@ -79,6 +79,7 @@ object GameLogic {
   - description: function that checks if a word is in the board
   - @return: true if the word is in the board, false otherwise
    */
+  //todo: meter para a palavra toda e nao so para as 2 primeiras letras
   def play(board: Board, word: String, coordInitial: Coord2D, direction: Direction , list: List[String]): Boolean = {
     val wordList = word.toList
     val newX = coordInitial._1 + directionToCoord(direction)._1
@@ -102,9 +103,11 @@ object GameLogic {
   - description: function that checks if the board has no repeated words and has all the words
   - @return: true if the board has all the words, false otherwise
    */
+  //todo: cruzamento de palavras com a mesma letra independemente se subrepoe
   def checkBoard(board: Board , wordsToFind: List[String]): Boolean = {
     val charsOnBoard = board.flatten.filter(_ != '-')
     val charsToFind = wordsToFind.flatMap(_.toList)
+
     val commonChars = charsOnBoard.filter(charsToFind.contains)
     val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
 

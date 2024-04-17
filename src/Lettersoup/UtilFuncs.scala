@@ -91,7 +91,7 @@ object UtilFuncs {
         (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
     }
   }
-
+  //todo: meter com o ENUM
   //TA - function that associates a coord. diretion vector to a Direction
   def directionToCoord(direction: Direction): Coord2D = {
     direction match {
