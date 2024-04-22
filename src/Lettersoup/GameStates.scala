@@ -1,13 +1,18 @@
 package Lettersoup
 
-import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, setBoardWithWords}
-import Lettersoup.UtilFuncs.{getWordsAndCoords, randomCharNotInList, stringToDirection}
-import Lettersoup.UtilStuff.Board
+import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, /*play,*/ setBoardWithWords}
+import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
+import Lettersoup.Utils.{Board, Direction}
+import Lettersoup.Utils.Direction.{directionToCoord, stringToDirection}
+import MyRandom.{MyRandom, SeedGenerator}
+import _root_.MyRandom.SeedGenerator.randomIntFunction
 
 import scala.annotation.tailrec
 
 // class for make the TUI of the game
 object GameStates {
+
+  val dirs = Seq(Direction.North, Direction.South, Direction.East, Direction.West, Direction.NorthEast, Direction.NorthWest, Direction.SouthEast, Direction.SouthWest)
 
   //TA - function that makes the menu of the game
   def mainLoop(): Unit = {
@@ -49,7 +54,7 @@ object GameStates {
 
   //TUI2 - function that loads the game
   private def loadGame(): Unit = {
-    val rand = MyRandom(3) //TODO: change the seed for being impured
+    val rand = MyRandom(randomIntFunction()) //TODO: change the seed for being impured DONE :]
     val wordsFound = 0
     val (numWords, board) = startGame()
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords , board.length)
@@ -76,7 +81,6 @@ object GameStates {
   }
   //todo:my random em um ficheiro
   //TUI3 - function for run the game
-  @tailrec
   def runGame(board: Board, list: List[String], wordsFound: Int = 0): Unit = {
     print("Insert a word: ")
     val word = scala.io.StdIn.readLine().toUpperCase
@@ -89,7 +93,8 @@ object GameStates {
     print("Insert a direction: ")
     val direction = scala.io.StdIn.readLine().toUpperCase()
     val dir = stringToDirection(direction)
-    if (play(board, word, coord2D, dir, list)) {
+    /*
+    if (play(board, word, coord2D, direction)) {
       val wordsToFind = list.filterNot(_ == word)
       if (wordsToFind.isEmpty) {
         winGame()
@@ -101,6 +106,7 @@ object GameStates {
       println("Please try again :(")
       runGame(board, list , wordsFound)
     }
+    */
   }
 
   private def loadSettings(): Unit = {
@@ -149,6 +155,5 @@ object GameStates {
     }
     println(colorCode)
   }
-
-
 }
+

@@ -1,8 +1,8 @@
 package Lettersoup
 
-import Lettersoup.UtilFuncs.directionToCoord
-import Lettersoup.UtilStuff.{Board, Coord2D}
-import Lettersoup.UtilStuff.Direction.Direction
+import Lettersoup.Utils.{Board, Coord2D, Direction}
+import Lettersoup.Utils.Direction.{Direction, directionToCoord}
+import MyRandom.MyRandom
 
 // class for the game logic
 object GameLogic {
@@ -80,21 +80,7 @@ object GameLogic {
   - @return: true if the word is in the board, false otherwise
    */
   //todo: meter para a palavra toda e nao so para as 2 primeiras letras
-  def play(board: Board, word: String, coordInitial: Coord2D, direction: Direction , list: List[String]): Boolean = {
-    val wordList = word.toList
-    val newX = coordInitial._1 + directionToCoord(direction)._1
-    val newY = coordInitial._2 + directionToCoord(direction)._2
-    if ( newX < 0 || newX >= board.length || newY < 0 || newY >= board.head.length){
-      return false
-    }
-    if (board(coordInitial._1)(coordInitial._2) == wordList.head
-      && board(newX)(newY) == wordList(1)
-      && list.contains(word)){
-      true
-    } else {
-      false
-    }
-  }
+
 
   /* T6
   _checkBoard_

@@ -1,13 +1,14 @@
 package Lettersoup
 
-import Lettersoup.UtilStuff.Direction.Direction
-import Lettersoup.UtilStuff.{Coord2D, Direction}
+import Lettersoup.Utils.Direction.Direction
+import Lettersoup.Utils.{Board, Coord2D, Direction}
+import MyRandom.MyRandom
 
 import scala.io.Source
 
 
 // class for make some function that are util for the game but they are not associated directly with the game logic
-object UtilFuncs {
+object UtilFunctions {
   /*
   _getWordsAndCoords_
   - params: filename -> name of the file with the words and coordinates
@@ -72,6 +73,22 @@ object UtilFuncs {
   }
 
 
+  def getCharAt(board: Board, position: Coord2D): Option[Char] = {
+    val (x, y) = position
+    if (x >= 0 && x < board.length && y >= 0 && y < board(x).length) Some(board(x)(y))
+    else None
+  }
+
+  def getCharsAround(board: Board, position: Coord2D, directions: List[Direction.Value]): List[Char] = {
+    directions.map { direction =>
+      val (dx, dy) = Utils.Direction.directionToCoord(direction)
+      val (x, y) = position
+      val newPos = (x + dx, y + dy)
+      getCharAt(board, newPos).getOrElse('-')
+    }
+  }
+
+
 
   //T4 - function that return a char which is not contained in a list of Strings
   /*
@@ -91,35 +108,5 @@ object UtilFuncs {
         (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
     }
   }
-  //todo: meter com o ENUM
-  //TA - function that associates a coord. diretion vector to a Direction
-  def directionToCoord(direction: Direction): Coord2D = {
-    direction match {
-      case Direction.North => (-1, 0)
-      case Direction.South => (1, 0)
-      case Direction.East => (0, 1)
-      case Direction.West => (0, -1)
-      case Direction.NorthEast => (-1, 1)
-      case Direction.NorthWest => (-1, -1)
-      case Direction.SouthEast => (1, 1)
-      case Direction.SouthWest => (1, -1)
-    }
-  }
-
-  //TA - function that associates a string to a Direction
-  def stringToDirection(direction: String): Direction = {
-    direction match {
-      case "N" => Direction.North
-      case "S" => Direction.South
-      case "E" => Direction.East
-      case "W" => Direction.West
-      case "NE" => Direction.NorthEast
-      case "NW" => Direction.NorthWest
-      case "SE" => Direction.SouthEast
-      case "SW" => Direction.SouthWest
-    }
-  }
-
-
 
 }

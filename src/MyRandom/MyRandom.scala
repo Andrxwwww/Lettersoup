@@ -1,4 +1,4 @@
-package Lettersoup
+package MyRandom
 
 //T1 - Pure API for random number generation
 case class MyRandom(seed: Long) {
