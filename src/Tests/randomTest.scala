@@ -1,11 +1,10 @@
 package Tests
 
-import Lettersoup.GameLogic.{completeBoardRandomly, setBoardWithWords}
-import Lettersoup.UtilFunctions.{getCharsAround, getWordsAndCoords, randomCharNotInList}
-import Lettersoup.Utils.Direction
-import MyRandom.MyRandom
-import _root_.MyRandom.SeedGenerator.randomIntFunction
-
+import Lettersoup.GameLogic.{completeBoardRandomly, play, setBoardWithWords}
+import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
+import Lettersoup.Utils.{Coord2D, Direction}
+import Lettersoup.Utils.Direction.{Direction, stringToDirection}
+import Random.SeedGenerator.myRandomGenerator
 object randomTest {
 
   def main(args: Array[String]): Unit = {
@@ -15,7 +14,7 @@ object randomTest {
 
     val board = List.fill(5, 5)('-')
 
-    val rand = MyRandom(randomIntFunction()) //TODO: change the seed for being impured DONE :]
+    val rand = myRandomGenerator()
 
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", 2, board.length)
     println(infos._1 + " " + infos._2)
@@ -25,8 +24,28 @@ object randomTest {
     val gameBoard = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
     println(gameBoard.map(_.mkString(" ")).mkString("\n"))
 
-    println(" ")
-    println(getCharsAround(gameBoard,( 5,5) , dirs))
+    var gameplay = playGame()
+    if (play(gameBoard, gameplay._1, gameplay._2, gameplay._3)) {
+      println("You found the word!")
+    } else {
+      println("You didn't find the word!")
+    }
+  }
+
+  def playGame(): ( String, Coord2D , Direction) = {
+    print("Insert a word: ")
+    val word = scala.io.StdIn.readLine().toUpperCase
+    if (word == "EXIT") {
+      System.exit(0)
+    }
+    print("Insert a coord -> x,y: ")
+    val coord = scala.io.StdIn.readLine()
+    val coords = coord.split(",")
+    val coord2D = (coords(0).toInt, coords(1).toInt)
+    print("Insert a direction: ")
+    val direction = scala.io.StdIn.readLine().toUpperCase()
+    val dir = stringToDirection(direction)
+    (word, coord2D, dir)
   }
 
 }

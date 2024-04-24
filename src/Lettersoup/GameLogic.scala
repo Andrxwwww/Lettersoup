@@ -2,7 +2,7 @@ package Lettersoup
 
 import Lettersoup.Utils.{Board, Coord2D, Direction}
 import Lettersoup.Utils.Direction.{Direction, directionToCoord}
-import MyRandom.MyRandom
+import Random.MyRandom
 
 // class for the game logic
 object GameLogic {
@@ -75,11 +75,40 @@ object GameLogic {
             word -> the word to find
             coordInitial -> the initial coordinate to start the search
             direction -> the direction to search
-            list -> the list of words to find
   - description: function that checks if a word is in the board
   - @return: true if the word is in the board, false otherwise
    */
   //todo: meter para a palavra toda e nao so para as 2 primeiras letras
+  def play(board:Board, word:String, coord:Coord2D, direction: Direction): Boolean = {
+    val remainWord = word.tail
+    val nextCoord = (coord._1 + directionToCoord(direction)._1, coord._2 + directionToCoord(direction)._2)
+
+    def validPos: Boolean = {
+      coord._1 >= 0 && coord._1 < board.length && coord._2 >= 0 && coord._2 < board.head.length
+    }
+
+    def charAt(letter: Char, coord: Coord2D, board: Board): Boolean = {
+      val (x, y) = coord
+      if (x >= 0 && x < board.length && y >= 0 && y < board(x).length) {
+        board(x)(y) == letter
+      } else {
+        false
+      }
+    }
+
+    (validPos,remainWord) match {
+      case (_, "") => true
+      case (false, _) => false
+      case (true, _) if word.nonEmpty =>
+        val letter = word.tail.head
+        if (charAt(letter, nextCoord, board)) {
+          val remainDirs = Direction.values.toList.filter(_ != direction)
+          remainDirs.exists(dir => play(board, remainWord, nextCoord, dir))
+        } else {
+          false
+        }
+    }
+  }
 
 
   /* T6

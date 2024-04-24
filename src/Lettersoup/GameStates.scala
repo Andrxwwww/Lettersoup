@@ -1,11 +1,10 @@
 package Lettersoup
 
-import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, /*play,*/ setBoardWithWords}
+import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, setBoardWithWords}
 import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
 import Lettersoup.Utils.{Board, Direction}
 import Lettersoup.Utils.Direction.{directionToCoord, stringToDirection}
-import MyRandom.{MyRandom, SeedGenerator}
-import _root_.MyRandom.SeedGenerator.randomIntFunction
+import Random.SeedGenerator.myRandomGenerator
 
 import scala.annotation.tailrec
 
@@ -54,7 +53,7 @@ object GameStates {
 
   //TUI2 - function that loads the game
   private def loadGame(): Unit = {
-    val rand = MyRandom(randomIntFunction()) //TODO: change the seed for being impured DONE :]
+    val rand = myRandomGenerator() //TODO: change the seed for being impured DONE :]
     val wordsFound = 0
     val (numWords, board) = startGame()
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords , board.length)
@@ -93,8 +92,8 @@ object GameStates {
     print("Insert a direction: ")
     val direction = scala.io.StdIn.readLine().toUpperCase()
     val dir = stringToDirection(direction)
-    /*
-    if (play(board, word, coord2D, direction)) {
+
+    if (play(board, word, coord2D, dir) && list.contains(word)) {
       val wordsToFind = list.filterNot(_ == word)
       if (wordsToFind.isEmpty) {
         winGame()
@@ -106,7 +105,7 @@ object GameStates {
       println("Please try again :(")
       runGame(board, list , wordsFound)
     }
-    */
+
   }
 
   private def loadSettings(): Unit = {

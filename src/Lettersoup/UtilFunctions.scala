@@ -1,8 +1,7 @@
 package Lettersoup
 
-import Lettersoup.Utils.Direction.Direction
 import Lettersoup.Utils.{Board, Coord2D, Direction}
-import MyRandom.MyRandom
+import Random.MyRandom
 
 import scala.io.Source
 
@@ -71,24 +70,6 @@ object UtilFunctions {
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
-
-
-  def getCharAt(board: Board, position: Coord2D): Option[Char] = {
-    val (x, y) = position
-    if (x >= 0 && x < board.length && y >= 0 && y < board(x).length) Some(board(x)(y))
-    else None
-  }
-
-  def getCharsAround(board: Board, position: Coord2D, directions: List[Direction.Value]): List[Char] = {
-    directions.map { direction =>
-      val (dx, dy) = Utils.Direction.directionToCoord(direction)
-      val (x, y) = position
-      val newPos = (x + dx, y + dy)
-      getCharAt(board, newPos).getOrElse('-')
-    }
-  }
-
-
 
   //T4 - function that return a char which is not contained in a list of Strings
   /*

@@ -1,4 +1,4 @@
-package MyRandom
+package Random
 
 //T1 - Pure API for random number generation
 case class MyRandom(seed: Long) {
