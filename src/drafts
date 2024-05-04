@@ -90,3 +90,23 @@
     //print the board
     println("Board:")
     println(board.map(_.mkString(" ")).mkString("\n"))
+
+-> old T6 (V1):
+
+  /* T6
+  _checkBoard_
+  - @param: board -> the board
+            wordsToFind -> the list of words to find
+  - description: function that checks if the board has no repeated words and has all the words
+  - @return: true if the board has all the words, false otherwise
+   */
+  //todo: cruzamento de palavras com a mesma letra independemente se subrepoe
+  def checkBoard(board: Board , wordsToFind: List[String]): Boolean = {
+    val charsOnBoard = board.flatten.filter(_ != '-')
+    val charsToFind = wordsToFind.flatMap(_.toList)
+
+    val commonChars = charsOnBoard.filter(charsToFind.contains)
+    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
+
+    commonChars.length == charsToFind.length && noDuplicates
+  }

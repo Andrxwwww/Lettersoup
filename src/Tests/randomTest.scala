@@ -1,51 +1,45 @@
 package Tests
 
-import Lettersoup.GameLogic.{completeBoardRandomly, play, setBoardWithWords}
-import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
-import Lettersoup.Utils.{Coord2D, Direction}
+import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, randomChar, setBoardWithWords}
+import Lettersoup.UtilFunctions.{getWordsAndCoords}
+import Lettersoup.Utils.Coord2D
 import Lettersoup.Utils.Direction.{Direction, stringToDirection}
+import Lettersoup.GameStates.userTrials
 import Random.SeedGenerator.myRandomGenerator
 object randomTest {
 
+
   def main(args: Array[String]): Unit = {
-
-
-    val dirs = List(Direction.North, Direction.South, Direction.East, Direction.West, Direction.NorthEast, Direction.NorthWest, Direction.SouthEast, Direction.SouthWest)
 
     val board = List.fill(5, 5)('-')
 
     val rand = myRandomGenerator()
+
 
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", 2, board.length)
     println(infos._1 + " " + infos._2)
     val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
     println(boardWithWords.map(_.mkString(" ")).mkString("\n"))
     println(" ")
-    val gameBoard = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
-    println(gameBoard.map(_.mkString(" ")).mkString("\n"))
-
-    var gameplay = playGame()
-    if (play(gameBoard, gameplay._1, gameplay._2, gameplay._3)) {
-      println("You found the word!")
+    val gameBoard = completeBoardRandomly(boardWithWords, rand, rand => randomChar(rand))._1
+    if (checkBoard(gameBoard , infos._1)) {
+      println("Board loaded correctly")
+      println(gameBoard.map(_.mkString(" ")).mkString("\n"))
+      println(" ")
+      println(System.nanoTime())
+      var gameplay = userTrials()
+      if (play(gameBoard, gameplay._1, gameplay._2, gameplay._3)) {
+        println("You found the word!")
+      } else {
+        println("You didn't find the word!")
+      }
     } else {
-      println("You didn't find the word!")
+      println("Board not loaded correctly")
     }
+
+
   }
 
-  def playGame(): ( String, Coord2D , Direction) = {
-    print("Insert a word: ")
-    val word = scala.io.StdIn.readLine().toUpperCase
-    if (word == "EXIT") {
-      System.exit(0)
-    }
-    print("Insert a coord -> x,y: ")
-    val coord = scala.io.StdIn.readLine()
-    val coords = coord.split(",")
-    val coord2D = (coords(0).toInt, coords(1).toInt)
-    print("Insert a direction: ")
-    val direction = scala.io.StdIn.readLine().toUpperCase()
-    val dir = stringToDirection(direction)
-    (word, coord2D, dir)
-  }
+
 
 }

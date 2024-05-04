@@ -1,19 +1,15 @@
 package Lettersoup
 
-import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, setBoardWithWords}
-import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
-import Lettersoup.Utils.{Board, Direction}
-import Lettersoup.Utils.Direction.{directionToCoord, stringToDirection}
+import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, randomChar, setBoardWithWords}
+import Lettersoup.UtilFunctions.getWordsAndCoords
+import Lettersoup.Utils.{Board, Coord2D}
+import Lettersoup.Utils.Direction.{Direction, stringToDirection}
 import Random.SeedGenerator.myRandomGenerator
 
-import scala.annotation.tailrec
-
-// class for make the TUI of the game
+// class for make the TUI of the game (T8)
 object GameStates {
-
-  val dirs = Seq(Direction.North, Direction.South, Direction.East, Direction.West, Direction.NorthEast, Direction.NorthWest, Direction.SouthEast, Direction.SouthWest)
-
   //TA - function that makes the menu of the game
+
   def mainLoop(): Unit = {
     println("1.Play")
     println("2.Settings")
@@ -22,19 +18,13 @@ object GameStates {
     print("Choose an option: ")
     val option = scala.io.StdIn.readLine()
     option match {
-      //TODO: call the functions for each case
-      case "1" => {
-        loadGame()
-      }
-      case "2" => {
-        loadSettings()
-      }
-      case "3" => {
-        println("See you next time!")
-        System.exit(0)
-      }
-      case _ => println("Invalid option \n")
-      mainLoop()
+      case "1" => loadGame()
+
+      case "2" => loadSettings()
+
+      case "3" => println("See you next time!"); System.exit(0)
+
+      case _ => println("Invalid option \n"); mainLoop()
     }
   }
 
@@ -65,47 +55,73 @@ object GameStates {
       loadGame()
     }
     val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
-    val gameBoard = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
+    val gameBoard = completeBoardRandomly(boardWithWords, rand, rand => randomChar(rand))._1
 
     if (checkBoard(gameBoard, infos._1)) {
       println("----LETTERSOUP----")
       print("    ")
       println(gameBoard.map(_.mkString(" ")).mkString("\n    "))
       println(" ")
-      runGame(gameBoard, infos._1, wordsFound)
+      // T7 - start the timer
+      val startTimer = System.currentTimeMillis()
+      runGame(gameBoard, infos._1, wordsFound, startTimer)
     } else {
       println("The game not loaded correctly :(")
       startGame()
     }
   }
-  //todo:my random em um ficheiro
+
   //TUI3 - function for run the game
-  def runGame(board: Board, list: List[String], wordsFound: Int = 0): Unit = {
+  def runGame(board: Board, list: List[String], wordsFound: Int = 0 , startTimer: Long): Unit = {
+
+    val (word, coord2D, dir) = userTrials()
+
+
+    if (play(board, word, coord2D, dir) && list.contains(word)) {
+      val wordsToFind = list.filterNot(_ == word)
+      // T7 - checks if the game is over + calculates the score based on time
+      if (wordsToFind.isEmpty) {
+        val endTime = System.currentTimeMillis()
+        val elapsedTime = (endTime - startTimer) / 10
+        val finalScore = elapsedTime * 10
+        println("Congratulations! You found all the words! Your score is: " + finalScore)
+        restartGame()
+      } else {
+        println("The word is in the board, you still have " + wordsToFind.length + " words to find! ")
+        runGame(board, wordsToFind, wordsFound + 1 , startTimer)
+      }
+    } else {
+      println("Please try again :(")
+      runGame(board, list , wordsFound , startTimer)
+    }
+
+  }
+
+  def userTrials(): (String,Coord2D,Direction) = {
     print("Insert a word: ")
     val word = scala.io.StdIn.readLine().toUpperCase
-    if (word == "EXIT") return
+    if (word == "EXIT") System.exit(0)
     if (word == "RESTART") loadGame()
+
     print("Insert a coord -> x,y: ")
     val coord = scala.io.StdIn.readLine()
     val coords = coord.split(",")
     val coord2D = (coords(0).toInt, coords(1).toInt)
+
     print("Insert a direction: ")
     val direction = scala.io.StdIn.readLine().toUpperCase()
     val dir = stringToDirection(direction)
+    (word,coord2D,dir)
+  }
 
-    if (play(board, word, coord2D, dir) && list.contains(word)) {
-      val wordsToFind = list.filterNot(_ == word)
-      if (wordsToFind.isEmpty) {
-        winGame()
-      } else {
-        println("The word is in the board, you still have " + wordsToFind.length + " words to find! ")
-        runGame(board, wordsToFind, wordsFound + 1)
-      }
-    } else {
-      println("Please try again :(")
-      runGame(board, list , wordsFound)
+  def restartGame(): Unit = {
+    println("Do you want to play again? (y/n)")
+    val playAgain = scala.io.StdIn.readLine()
+    playAgain match {
+      case "y" => loadGame()
+      case "n" => mainLoop()
+      case _ => println("Invalid option")
     }
-
   }
 
   private def loadSettings(): Unit = {
@@ -130,17 +146,6 @@ object GameStates {
       }
       case _ => println("Invalid option \n")
         loadSettings()
-    }
-  }
-
-  private def winGame(): Unit = {
-    println("Congratulations! You found all the words!")
-    println("Do you want to play again? (y/n)")
-    val playAgain = scala.io.StdIn.readLine()
-    playAgain match {
-      case "y" => loadGame()
-      case "n" => mainLoop()
-      case _ => println("Invalid option")
     }
   }
 

@@ -1,5 +1,6 @@
 package Lettersoup
 
+import Lettersoup.UtilFunctions.validPosition
 import Lettersoup.Utils.{Board, Coord2D, Direction}
 import Lettersoup.Utils.Direction.{Direction, directionToCoord}
 import Random.MyRandom
@@ -78,25 +79,20 @@ object GameLogic {
   - description: function that checks if a word is in the board
   - @return: true if the word is in the board, false otherwise
    */
-  //todo: meter para a palavra toda e nao so para as 2 primeiras letras
   def play(board:Board, word:String, coord:Coord2D, direction: Direction): Boolean = {
     val remainWord = word.tail
     val nextCoord = (coord._1 + directionToCoord(direction)._1, coord._2 + directionToCoord(direction)._2)
 
-    def validPos: Boolean = {
-      coord._1 >= 0 && coord._1 < board.length && coord._2 >= 0 && coord._2 < board.head.length
-    }
-
     def charAt(letter: Char, coord: Coord2D, board: Board): Boolean = {
       val (x, y) = coord
-      if (x >= 0 && x < board.length && y >= 0 && y < board(x).length) {
+      if (validPosition(coord,board)) {
         board(x)(y) == letter
       } else {
         false
       }
     }
 
-    (validPos,remainWord) match {
+    (validPosition(coord,board),remainWord) match {
       case (_, "") => true
       case (false, _) => false
       case (true, _) if word.nonEmpty =>
@@ -110,23 +106,41 @@ object GameLogic {
     }
   }
 
-
-  /* T6
+  /* T6 (V2)
   _checkBoard_
   - @param: board -> the board
             wordsToFind -> the list of words to find
   - description: function that checks if the board has no repeated words and has all the words
   - @return: true if the board has all the words, false otherwise
    */
-  //todo: cruzamento de palavras com a mesma letra independemente se subrepoe
-  def checkBoard(board: Board , wordsToFind: List[String]): Boolean = {
-    val charsOnBoard = board.flatten.filter(_ != '-')
-    val charsToFind = wordsToFind.flatMap(_.toList)
+  /*
+  Todo: se houver uma palavra fora da lista de palavras
+    que esteja no board e que esteja repetida com uma que esteja no board
+    a função vai retornar true porque so checka com as palavras da lista e nao com o board
+   */
+  def checkBoard(board: Board, wordsToFind: List[String]): Boolean = {
+    def checkWord(word: String): Boolean = {
+      board.indices.exists { x =>
+        board(x).indices.exists { y =>
+          Direction.values.exists { direction =>
+            play(board, word, (x, y), direction)
+          }
+        }
+      }
+    }
 
-    val commonChars = charsOnBoard.filter(charsToFind.contains)
-    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length
+    def checkAllWords(words: List[String]): Boolean = words match {
+      case Nil => true
+      case head :: tail => checkWord(head) && checkAllWords(tail)
+    }
 
-    commonChars.length == charsToFind.length && noDuplicates
+    val allWordsCanBePlayed = checkAllWords(wordsToFind)
+    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length //TODO: need fix
+
+    allWordsCanBePlayed && noDuplicates
   }
+
+
+
 
 }
