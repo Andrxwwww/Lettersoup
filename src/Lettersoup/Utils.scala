@@ -8,7 +8,7 @@ object Utils {
 
   object Direction extends Enumeration {
     type Direction = Value
-    val North, South, East, West, NorthEast, NorthWest, SouthEast, SouthWest = Value
+    private val North, South, East, West, NorthEast, NorthWest, SouthEast, SouthWest = Value
 
     //TA - function that associates a coord. diretion vector to a Direction
     def directionToCoord(direction: Direction): Coord2D = {

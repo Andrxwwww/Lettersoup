@@ -131,7 +131,9 @@ object GameLogic {
 
     def checkAllWords(words: List[String]): Boolean = words match {
       case Nil => true
-      case head :: tail => checkWord(head) && checkAllWords(tail)
+      case head :: tail =>
+        val result = checkWord(head) // Check the current word
+        result && checkAllWords(tail) // Recursively check the rest, combining results with AND
     }
 
     val allWordsCanBePlayed = checkAllWords(wordsToFind)

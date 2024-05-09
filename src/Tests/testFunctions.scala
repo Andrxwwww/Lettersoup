@@ -6,12 +6,12 @@ import Lettersoup.Utils.Board
 object testFunctions {
   def main(args: Array[String]): Unit = {
     val board: Board = List(
-      List('a', 'b', 'c'),
-      List('d', 'e', 'f'),
-      List('d', 'e', 'f')
+      List('a', 'b', 'a'),
+      List('a', 'b', 'a'),
+      List('a', 'a', 'a')
     )
 
-    val wordsToFind: List[String] = List("abc" , "def")
+    val wordsToFind: List[String] = List("aba")
 
     val result: Boolean = checkBoard(board, wordsToFind)
     println(s"Board contains repeated words: $result")

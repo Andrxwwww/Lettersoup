@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #6D6D6D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane layoutX="171.0" layoutY="108.0" prefHeight="226.0" prefWidth="258.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
+         <children>
+            <Button layoutX="51.0" layoutY="22.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="157.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Play">
+               <font>
+                  <Font name="Monospaced Regular" size="16.0" />
+               </font>
+            </Button>
+            <Button layoutX="51.0" layoutY="83.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="157.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Settings">
+               <font>
+                  <Font name="Monospaced Regular" size="16.0" />
+               </font>
+            </Button>
+            <Button layoutX="51.0" layoutY="143.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="157.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Exit">
+               <font>
+                  <Font name="Monospaced Regular" size="16.0" />
+               </font>
+            </Button>
+         </children></Pane>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="147.0" layoutY="37.0" prefHeight="59.0" prefWidth="307.0" text="Lettersoup" textFill="WHITE">
+         <font>
+            <Font name="OCR A Extended" size="44.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+         <effect>
+            <Glow level="0.77" />
+         </effect>
+      </Label>
+      <Label layoutX="229.0" layoutY="380.0" text="by André Soares &amp; Carlos Monteiro" textFill="#515151">
+         <font>
+            <Font name="Palatino Linotype" size="9.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
