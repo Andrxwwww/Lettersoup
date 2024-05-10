@@ -37,6 +37,20 @@ object Utils {
         case "SW" =>SouthWest
       }
     }
+
+    def oppositeDirection(direction: Direction): Direction = {
+      direction match {
+        case North => South
+        case South => North
+        case East => West
+        case West => East
+        case NorthEast => SouthWest
+        case NorthWest => SouthEast
+        case SouthEast => NorthWest
+        case SouthWest => NorthEast
+      }
+    }
+
   }
 
 }

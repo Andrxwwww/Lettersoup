@@ -1,39 +1,25 @@
 package GUI
 
-import javafx.fxml.{FXML, FXMLLoader}
-import javafx.scene.Scene
-import javafx.scene.control.Button
+import javafx.fxml.FXML
+import javafx.scene.layout.{AnchorPane}
 import javafx.stage.Stage
 class Controller {
-  @FXML
-  private var playButton_mm: Button = _
-  @FXML
-  private var settingsButton_mm: Button = _
-  @FXML
-  private var exitButton_mm: Button = _
-  @FXML
-  private var backButton_settings: Button = _
+  @FXML var mainMenuPane: AnchorPane = _
+  @FXML var settingsPane: AnchorPane = _
 
-  // Method for Play button action
-  def onPlayClicked(): Unit = {
-    // TODO
+  def showSettings(): Unit = {
+    mainMenuPane.setVisible(false)
+    settingsPane.setVisible(true)
   }
 
-  // Method for Settings button action
-  def onSettingsClicked(): Unit = {
-    // TODO
+  def showMainMenu(): Unit = {
+    settingsPane.setVisible(false)
+    mainMenuPane.setVisible(true)
   }
 
-  // Method for Exit button action
   def onExitClicked(): Unit = {
-    val stage: Stage = exitButton_mm.getScene.getWindow.asInstanceOf[Stage]
-    stage.close() // Closes the application window
+    val stage = mainMenuPane.getScene.getWindow.asInstanceOf[Stage]
+    stage.close()
   }
 
-  // Method for Back button action
-  def onBackClicked(): Unit = {
-    val stage: Stage = backButton_settings.getScene.getWindow.asInstanceOf[Stage]
-    val parent = FXMLLoader.load(getClass.getResource("MainMenu.fxml"))
-    stage.setScene(new Scene(parent, 600, 400))
-  }
 }

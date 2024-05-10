@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #6D6D6D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
-   <children>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #6D6D6D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+   <!-- Main Menu Panel -->
+   <AnchorPane fx:id="mainMenuPane">
       <Pane layoutX="172.0" layoutY="105.0" prefHeight="211.0" prefWidth="256.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
          <children>
             <Button fx:id="playButton_mm" layoutX="66.0" layoutY="23.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="127.0" style="-fx-background-color: #F9F9F9; -fx-background-radius: 5;" text="Play">
@@ -15,7 +15,7 @@
                   <Font name="Monospaced Regular" size="16.0" />
                </font>
             </Button>
-            <Button fx:id="settingsButton_mm" layoutX="67.0" layoutY="78.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="127.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Settings">
+            <Button fx:id="settingsButton_mm" layoutX="67.0" layoutY="78.0" mnemonicParsing="false" onAction="#showSettings" prefHeight="43.0" prefWidth="127.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Settings">
                <font>
                   <Font name="Monospaced Regular" size="16.0" />
                </font>
@@ -25,22 +25,37 @@
                   <Font name="Monospaced Regular" size="16.0" />
                </font>
             </Button>
-         </children></Pane>
+         </children>
+      </Pane>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="147.0" layoutY="37.0" prefHeight="59.0" prefWidth="307.0" text="Lettersoup" textFill="WHITE">
          <font>
             <Font name="OCR A Extended" size="44.0" />
          </font>
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
          <effect>
             <Glow level="0.77" />
          </effect>
       </Label>
-      <Label layoutX="229.0" layoutY="380.0" text="by André Soares &amp; Carlos Monteiro" textFill="#515151">
+   </AnchorPane>
+
+   <!-- Settings Panel -->
+   <AnchorPane fx:id="settingsPane" visible="false">
+      <Pane layoutX="171.0" layoutY="116.0" prefHeight="151.0" prefWidth="258.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
+         <children>
+            <Label layoutX="111.0" layoutY="64.0" prefHeight="24.0" prefWidth="36.0" text="TODO" />
+         </children>
+      </Pane>
+      <Button fx:id="backButton_settings" layoutX="266.0" layoutY="305.0" mnemonicParsing="false" onAction="#showMainMenu" prefHeight="18.0" prefWidth="68.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Back">
          <font>
-            <Font name="Palatino Linotype" size="9.0" />
+            <Font name="Monospaced Regular" size="13.0" />
          </font>
+      </Button>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="147.0" layoutY="37.0" prefHeight="59.0" prefWidth="307.0" text="Lettersoup" textFill="WHITE">
+         <font>
+            <Font name="OCR A Extended" size="44.0" />
+         </font>
+         <effect>
+            <Glow level="0.77" />
+         </effect>
       </Label>
-   </children>
-</AnchorPane>
+   </AnchorPane>
+</StackPane>

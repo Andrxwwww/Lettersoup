@@ -2,7 +2,7 @@ package Lettersoup
 
 import Lettersoup.UtilFunctions.validPosition
 import Lettersoup.Utils.{Board, Coord2D, Direction}
-import Lettersoup.Utils.Direction.{Direction, directionToCoord}
+import Lettersoup.Utils.Direction.{Direction, directionToCoord, oppositeDirection}
 import Random.MyRandom
 
 // class for the game logic
@@ -70,6 +70,8 @@ object GameLogic {
     }
     (newBoard, newRand)
   }
+
+  // TODO REDO T5 AND T6
   /* T5
   _play_
   - @param: board -> the board
@@ -98,7 +100,7 @@ object GameLogic {
       case (true, _) if word.nonEmpty =>
         val letter = word.tail.head
         if (charAt(letter, nextCoord, board)) {
-          val remainDirs = Direction.values.toList.filter(_ != direction)
+          val remainDirs = Direction.values.toList.filter(_ != oppositeDirection(direction))
           remainDirs.exists(dir => play(board, remainWord, nextCoord, dir))
         } else {
           false

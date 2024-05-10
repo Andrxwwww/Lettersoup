@@ -14,8 +14,8 @@ class GUItest extends Application {
     primaryStage.setScene(new Scene(root, 600, 400))
     primaryStage.show()
   }
-
 }
+
 object FxApp {
   def main(args: Array[String]): Unit = {
     Application.launch(classOf[GUItest], args: _*)

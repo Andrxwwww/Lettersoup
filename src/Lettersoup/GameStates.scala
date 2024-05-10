@@ -76,7 +76,6 @@ object GameStates {
 
     val (word, coord2D, dir) = userTrials()
 
-
     if (play(board, word, coord2D, dir) && list.contains(word)) {
       val wordsToFind = list.filterNot(_ == word)
       // T7 - checks if the game is over + calculates the score based on time
@@ -94,7 +93,6 @@ object GameStates {
       println("Please try again :(")
       runGame(board, list , wordsFound , startTimer)
     }
-
   }
 
   def userTrials(): (String,Coord2D,Direction) = {
