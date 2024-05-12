@@ -110,3 +110,44 @@
 
     commonChars.length == charsToFind.length && noDuplicates
   }
+
+
+  import javafx.fxml.{FXML, FXMLLoader}
+  import javafx.scene.layout.{AnchorPane, GridPane}
+  import javafx.stage.Stage
+  import Lettersoup.Utils.Board
+  import Random.SeedGenerator.myRandomGenerator
+  import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, randomChar, setBoardWithWords}
+  import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
+  import Lettersoup.Utils.{Board, Coord2D}
+  import Lettersoup.Utils.Direction.{Direction, stringToDirection}
+  import Random.SeedGenerator.myRandomGenerator
+  import javafx.scene.control.Label
+
+  <children>
+     <Button fx:id="Button1" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" />
+     <Button fx:id="Button2" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="1" />
+     <Button fx:id="Button3" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="3" />
+     <Button fx:id="Button4" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="4" />
+     <Button fx:id="Button5" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="2" />
+     <Button fx:id="Button6" mnemonicParsing="false" prefHeight="44.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.rowIndex="4" />
+     <Button fx:id="Button7" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+     <Button fx:id="Button8" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+     <Button fx:id="Button9" mnemonicParsing="false" prefHeight="69.0" prefWidth="44.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+     <Button fx:id="Button10" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+     <Button fx:id="Button11" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.rowIndex="3" />
+     <Button fx:id="Button12" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+     <Button fx:id="Button13" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+     <Button fx:id="Button14" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+     <Button fx:id="Button15" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+     <Button fx:id="Button16" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.rowIndex="2" />
+     <Button fx:id="Button17" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+     <Button fx:id="Button18" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+     <Button fx:id="Button19" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+     <Button fx:id="Button20" mnemonicParsing="false" prefHeight="44.0" prefWidth="44.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+     <Button fx:id="Button21" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.rowIndex="1" />
+     <Button fx:id="Button22" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+     <Button fx:id="Button23" mnemonicParsing="false" prefHeight="47.0" prefWidth="53.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+     <Button fx:id="Button24" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+     <Button fx:id="Button25" mnemonicParsing="false" prefHeight="44.0" prefWidth="91.0" style="-fx-background-color: #DDDDDD; -fx-border-color: #000000;" text="-" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+  </children>

@@ -1,6 +1,8 @@
 package Lettersoup
 
-import Lettersoup.Utils.{Board, Coord2D}
+import Lettersoup.Utils.Direction.Direction
+import Lettersoup.Utils.{Board, Coord2D, Direction}
+import Random.MyRandom
 import Random.SeedGenerator.myRandomGenerator
 
 import scala.io.Source
@@ -81,6 +83,55 @@ object UtilFunctions {
   def validPosition(coord: Coord2D, board: Board): Boolean = {
     coord._1 >= 0 && coord._1 < board.length && coord._2 >= 0 && coord._2 < board.head.length
   }
+
+  //T4 - function that return a char which is not contained in a list of Strings
+  /*
+  _randomCharNotInList_
+  - params: list -> list of strings
+            rand -> MyRandom object
+  - description: function that returns a random character that is not contained in a list of strings
+  - return: a tuple with a random character and a new MyRandom object
+   */
+  def randomCharNotInList(list: List[String]): MyRandom => (Char, MyRandom) = {
+    rand: MyRandom => {
+      val (char, newRand) = rand.nextInt(26) // Gera um número aleatório entre 0 e 26
+      val randomChar = ('A' + char).toChar // Converte o número para um caractere entre 'A' e 'Z'
+      if (list.flatten.contains(randomChar))
+        randomCharNotInList(list)(newRand) // Se o caractere já estiver na lista, chama a função recursivamente
+      else
+        (randomChar, newRand) // Retorna o caractere aleatório e o novo estado do gerador de números aleatórios
+    }
+  }
+
+  def countWordInBoard(board: Board, word: String): Int = {
+    val directions = Direction.values.toList
+
+    def searchWord(x: Int, y: Int, index: Int, visited: Set[(Int, Int)]): Int = {
+      if (index == word.length) 1
+      else {
+        directions.map { dir =>
+          val (dx, dy) = Direction.directionToCoord(dir)
+          val nx = x + dx
+          val ny = y + dy
+          if (validPosition((nx, ny), board) && board(nx)(ny) == word.charAt(index) && !visited.contains((nx, ny)))
+            searchWord(nx, ny, index + 1, visited + ((nx, ny)))
+          else
+            0
+        }.sum
+      }
+    }
+
+    val results = board.indices.flatMap { row =>
+      board.head.indices.flatMap { col =>
+        if (board(row)(col) == word.head) Some(searchWord(row, col, 1, Set((row, col))))
+        else None
+      }
+    }
+
+    results.sum
+  }
+
+
 
 
 }

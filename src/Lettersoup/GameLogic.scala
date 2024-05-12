@@ -1,6 +1,6 @@
 package Lettersoup
 
-import Lettersoup.UtilFunctions.validPosition
+import Lettersoup.UtilFunctions.{countWordInBoard, validPosition}
 import Lettersoup.Utils.{Board, Coord2D, Direction}
 import Lettersoup.Utils.Direction.{Direction, directionToCoord, oppositeDirection}
 import Random.MyRandom
@@ -56,7 +56,7 @@ object GameLogic {
             r -> a random number generator
             f -> a function that generates a random char
   - description: function that completes the board with random chars
-  [other part of T4 is in UtilFuncs for use in f param]
+  [other part of T4 is in UtilFunctions for use in f param]
   - @return: a tuple with the board completed and a new random number generator
    */
   def completeBoardRandomly(board: Board, r: MyRandom, f: MyRandom => (Char, MyRandom)): (Board, MyRandom) = {
@@ -71,7 +71,6 @@ object GameLogic {
     (newBoard, newRand)
   }
 
-  // TODO REDO T5 AND T6
   /* T5
   _play_
   - @param: board -> the board
@@ -115,11 +114,6 @@ object GameLogic {
   - description: function that checks if the board has no repeated words and has all the words
   - @return: true if the board has all the words, false otherwise
    */
-  /*
-  Todo: se houver uma palavra fora da lista de palavras
-    que esteja no board e que esteja repetida com uma que esteja no board
-    a função vai retornar true porque so checka com as palavras da lista e nao com o board
-   */
   def checkBoard(board: Board, wordsToFind: List[String]): Boolean = {
     def checkWord(word: String): Boolean = {
       board.indices.exists { x =>
@@ -134,14 +128,15 @@ object GameLogic {
     def checkAllWords(words: List[String]): Boolean = words match {
       case Nil => true
       case head :: tail =>
-        val result = checkWord(head) // Check the current word
-        result && checkAllWords(tail) // Recursively check the rest, combining results with AND
+        val result = checkWord(head) // check the current word
+        //println(s"Word '$head' appears ${countWordInBoard(board, head)} times in the board")
+        result && checkAllWords(tail)
+        countWordInBoard(board, head) == 1
     }
 
     val allWordsCanBePlayed = checkAllWords(wordsToFind)
-    val noDuplicates = wordsToFind.distinct.length == wordsToFind.length //TODO: need fix
 
-    allWordsCanBePlayed && noDuplicates
+    allWordsCanBePlayed
   }
 
 

@@ -1,4 +1,4 @@
-package Tests
+package Lettersoup
 
 import Lettersoup.GameStates.mainLoop
 

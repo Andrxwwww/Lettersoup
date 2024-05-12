@@ -1,7 +1,7 @@
 package Lettersoup
 
 import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, randomChar, setBoardWithWords}
-import Lettersoup.UtilFunctions.getWordsAndCoords
+import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
 import Lettersoup.Utils.{Board, Coord2D}
 import Lettersoup.Utils.Direction.{Direction, stringToDirection}
 import Random.SeedGenerator.myRandomGenerator
@@ -43,7 +43,7 @@ object GameStates {
 
   //TUI2 - function that loads the game
   private def loadGame(): Unit = {
-    val rand = myRandomGenerator() //TODO: change the seed for being impured DONE :]
+    val rand = myRandomGenerator()
     val wordsFound = 0
     val (numWords, board) = startGame()
     val infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", numWords , board.length)
@@ -55,7 +55,7 @@ object GameStates {
       loadGame()
     }
     val boardWithWords = setBoardWithWords(board, infos._1, infos._2)
-    val gameBoard = completeBoardRandomly(boardWithWords, rand, rand => randomChar(rand))._1
+    val gameBoard = completeBoardRandomly(boardWithWords, rand, randomCharNotInList(infos._1))._1
 
     if (checkBoard(gameBoard, infos._1)) {
       println("----LETTERSOUP----")
@@ -74,7 +74,19 @@ object GameStates {
   //TUI3 - function for run the game
   def runGame(board: Board, list: List[String], wordsFound: Int = 0 , startTimer: Long): Unit = {
 
-    val (word, coord2D, dir) = userTrials()
+    print("Insert a word: ")
+    val word = scala.io.StdIn.readLine().toUpperCase
+    if (word == "EXIT") System.exit(0)
+    if (word == "RESTART") loadGame()
+
+    print("Insert a coord -> x,y: ")
+    val coord = scala.io.StdIn.readLine()
+    val coords = coord.split(",")
+    val coord2D = (coords(0).toInt, coords(1).toInt)
+
+    print("Insert a direction: ")
+    val direction = scala.io.StdIn.readLine().toUpperCase()
+    val dir = stringToDirection(direction)
 
     if (play(board, word, coord2D, dir) && list.contains(word)) {
       val wordsToFind = list.filterNot(_ == word)
@@ -95,22 +107,6 @@ object GameStates {
     }
   }
 
-  def userTrials(): (String,Coord2D,Direction) = {
-    print("Insert a word: ")
-    val word = scala.io.StdIn.readLine().toUpperCase
-    if (word == "EXIT") System.exit(0)
-    if (word == "RESTART") loadGame()
-
-    print("Insert a coord -> x,y: ")
-    val coord = scala.io.StdIn.readLine()
-    val coords = coord.split(",")
-    val coord2D = (coords(0).toInt, coords(1).toInt)
-
-    print("Insert a direction: ")
-    val direction = scala.io.StdIn.readLine().toUpperCase()
-    val dir = stringToDirection(direction)
-    (word,coord2D,dir)
-  }
 
   def restartGame(): Unit = {
     println("Do you want to play again? (y/n)")

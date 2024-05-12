@@ -10,6 +10,19 @@ object Utils {
     type Direction = Value
     private val North, South, East, West, NorthEast, NorthWest, SouthEast, SouthWest = Value
 
+    def coordToDirection(coord: Coord2D): Direction = {
+      coord match {
+        case (-1, 0) => North
+        case (1, 0) => South
+        case (0, 1) => East
+        case (0, -1) => West
+        case (-1, 1) => NorthEast
+        case (-1, -1) => NorthWest
+        case (1, 1) => SouthEast
+        case (1, -1) => SouthWest
+      }
+    }
+
     //TA - function that associates a coord. diretion vector to a Direction
     def directionToCoord(direction: Direction): Coord2D = {
       direction match {
@@ -38,6 +51,20 @@ object Utils {
       }
     }
 
+    def directionToString(direction: Direction): String = {
+      direction match {
+        case North => "N"
+        case South => "S"
+        case East => "E"
+        case West => "W"
+        case NorthEast => "NE"
+        case NorthWest => "NW"
+        case SouthEast => "SE"
+        case SouthWest => "SW"
+        case _ => "no direction"
+      }
+    }
+
     def oppositeDirection(direction: Direction): Direction = {
       direction match {
         case North => South
@@ -50,6 +77,7 @@ object Utils {
         case SouthWest => NorthEast
       }
     }
+
 
   }
 
