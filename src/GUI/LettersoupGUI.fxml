@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #6D6D6D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <!-- Main Menu Panel -->
-   <AnchorPane fx:id="mainMenuPane">
+   <AnchorPane fx:id="mainMenuPane" visible="false">
       <Pane layoutX="172.0" layoutY="82.0" prefHeight="211.0" prefWidth="256.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
          <children>
             <Button fx:id="playButton_mm" layoutX="66.0" layoutY="23.0" mnemonicParsing="false" onAction="#handlePlayButton" prefHeight="43.0" prefWidth="127.0" style="-fx-background-color: #F9F9F9; -fx-background-radius: 5;" text="Play">
@@ -44,12 +46,24 @@
 
    <!-- Settings Panel -->
    <AnchorPane fx:id="settingsPane" prefHeight="600.0" prefWidth="800.0" visible="false">
-      <Pane layoutX="172.0" layoutY="82.0" prefHeight="151.0" prefWidth="258.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
+      <Pane layoutX="76.0" layoutY="78.0" prefHeight="191.0" prefWidth="471.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
          <children>
-            <Label layoutX="111.0" layoutY="64.0" prefHeight="24.0" prefWidth="36.0" text="TODO" />
+            <ColorPicker fx:id="bgColorPicker" editable="true" layoutX="324.0" layoutY="20.0" onAction="#handleColorPicker" prefHeight="30.0" prefWidth="134.0" style="-fx-background-color: #7d7d7d;">
+               <value>
+                  <Color red="1.0" green="0.6470588445663452" />
+               </value>
+            </ColorPicker>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-5.0" layoutY="16.0" prefHeight="37.0" prefWidth="341.0" text="Word selection background color:" textFill="WHITE">
+               <font>
+                  <Font name="OCR A Extended" size="16.0" />
+               </font>
+               <effect>
+                  <Glow level="0.77" />
+               </effect>
+            </Label>
          </children>
       </Pane>
-      <Button fx:id="backButton_settings" layoutX="266.0" layoutY="305.0" mnemonicParsing="false" onAction="#showMainMenu" prefHeight="18.0" prefWidth="68.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Back">
+      <Button fx:id="backButton_settings" layoutX="266.0" layoutY="344.0" mnemonicParsing="false" onAction="#showMainMenu" prefHeight="18.0" prefWidth="68.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Back">
          <font>
             <Font name="Monospaced Regular" size="13.0" />
          </font>
@@ -64,7 +78,7 @@
       </Label>
    </AnchorPane>
    <!-- Game Panel -->
-   <AnchorPane fx:id="gamePane" prefHeight="600.0" prefWidth="800.0" visible="false">
+   <AnchorPane fx:id="gamePane" prefHeight="600.0" prefWidth="800.0">
       <Pane layoutX="125.0" layoutY="42.0" prefHeight="296.0" prefWidth="359.0" style="-fx-background-color: #888888; -fx-background-radius: 15;">
          <children>
             <GridPane fx:id="gamegrid" layoutX="72.0" layoutY="21.0" prefHeight="220.0" prefWidth="220.0" style="-fx-background-color: #FFFFFF;">
@@ -111,7 +125,7 @@
                </children>
             </GridPane>
             <TextField fx:id="wordVisualize" alignment="CENTER" editable="false" layoutX="59.0" layoutY="252.0" onAction="#getButtonInfoClicked" prefHeight="31.0" prefWidth="184.0" promptText="word selected" />
-            <Button fx:id="resetWord" layoutX="251.0" layoutY="256.0" mnemonicParsing="false" onAction="#handleresetWord" prefHeight="24.0" prefWidth="58.0" style="-fx-background-color: #ff4545; -fx-background-radius: 20;" text="Reset">
+            <Button fx:id="resetWord" layoutX="251.0" layoutY="256.0" mnemonicParsing="false" onAction="#handleReset" prefHeight="24.0" prefWidth="58.0" style="-fx-background-color: #ff4545; -fx-background-radius: 20;" text="Reset">
                <font>
                   <Font name="Monospaced Regular" size="13.0" />
                </font>
@@ -129,6 +143,76 @@
       <Button layoutX="248.0" layoutY="351.0" mnemonicParsing="false" onAction="#handleGamePlayButton" prefHeight="37.0" prefWidth="120.0" style="-fx-background-color: #ff7536; -fx-background-radius: 5;" text="Play">
          <font>
             <Font name="Monospaced Regular" size="16.0" />
+         </font>
+      </Button>
+      <Pane fx:id="winGame" layoutX="88.0" layoutY="242.0" prefHeight="151.0" prefWidth="439.0" style="-fx-background-color: #444444; -fx-background-radius: 15;" visible="false">
+         <children>
+            <Label layoutX="55.0" layoutY="14.0" prefHeight="30.0" prefWidth="330.0" text="You found all the word!  Congrats :)!" textFill="#00ff15">
+               <font>
+                  <Font name="Palatino Linotype" size="20.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+            <Label layoutX="92.0" layoutY="74.0" prefHeight="30.0" prefWidth="256.0" text="Do you want to play again ?" textFill="WHITE">
+               <font>
+                  <Font name="Palatino Linotype" size="20.0" />
+               </font>
+            </Label>
+            <Button fx:id="YesOption" layoutX="155.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleRepeatGame" prefHeight="24.0" prefWidth="58.0" style="-fx-background-color: #9cffa7; -fx-background-radius: 5;" text="Yes">
+               <font>
+                  <Font name="Monospaced Regular" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="NoOption" layoutX="226.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleRepeatGame" prefHeight="24.0" prefWidth="58.0" style="-fx-background-color: #ff7070; -fx-background-radius: 5;" text="No">
+               <font>
+                  <Font name="Monospaced Regular" size="12.0" />
+               </font>
+            </Button>
+            <Label layoutX="162.0" layoutY="44.0" prefHeight="30.0" prefWidth="68.0" text=" Score:" textFill="WHITE">
+               <font>
+                  <Font name="Palatino Linotype" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreID" alignment="CENTER" contentDisplay="CENTER" layoutX="209.0" layoutY="44.0" prefHeight="32.0" prefWidth="80.0" text="1234" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Pane>
+      <Pane fx:id="boardFailedPop" layoutX="73.0" layoutY="226.0" prefHeight="167.0" prefWidth="465.0" style="-fx-background-color: #444444; -fx-background-radius: 15;" visible="false">
+         <children>
+            <Label layoutX="22.0" layoutY="19.0" prefHeight="59.0" prefWidth="422.0" text="Board failed to load, Please Try again" textFill="#ff5500">
+               <font>
+                  <Font name="Palatino Linotype" size="25.0" />
+               </font>
+               <effect>
+                  <Glow level="1.0" />
+               </effect>
+            </Label>
+            <Button fx:id="RetryID" layoutX="99.0" layoutY="89.0" mnemonicParsing="false" onAction="#handleGameFailedLoad" prefHeight="37.0" prefWidth="120.0" style="-fx-background-color: #ffd078; -fx-background-radius: 10;" text="Retry">
+               <font>
+                  <Font name="Monospaced Regular" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="QuitID" layoutX="239.0" layoutY="89.0" mnemonicParsing="false" onAction="#handleGameFailedLoad" prefHeight="37.0" prefWidth="120.0" style="-fx-background-color: #ffb0b0; -fx-background-radius: 10;" text="Quit">
+               <font>
+                  <Font name="Monospaced Regular" size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Button fx:id="backButton_settings1" layoutX="20.0" layoutY="358.0" mnemonicParsing="false" onAction="#showMainMenu" prefHeight="18.0" prefWidth="68.0" style="-fx-background-color: #F3F3F3; -fx-background-radius: 5;" text="Back">
+         <font>
+            <Font name="Monospaced Regular" size="13.0" />
          </font>
       </Button>
    </AnchorPane>

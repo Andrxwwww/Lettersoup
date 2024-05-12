@@ -93,7 +93,7 @@ object GameStates {
       // T7 - checks if the game is over + calculates the score based on time
       if (wordsToFind.isEmpty) {
         val endTime = System.currentTimeMillis()
-        val elapsedTime = (endTime - startTimer) / 10
+        val elapsedTime = (endTime - startTimer)
         val finalScore = elapsedTime * 10
         println("Congratulations! You found all the words! Your score is: " + finalScore)
         restartGame()

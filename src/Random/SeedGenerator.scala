@@ -4,10 +4,19 @@ import java.io._
 
 object SeedGenerator {
 
+
   def getSeedFromFile(filename: String): MyRandom = {
-    val ois = new ObjectInputStream(new FileInputStream(filename))
-    val myRandom = try ois.readObject().asInstanceOf[MyRandom] finally ois.close()
-    myRandom
+    val file = new File(filename)
+    if (file.exists() && file.length() > 0) {
+      val ois = new ObjectInputStream(new FileInputStream(file))
+      try {
+        ois.readObject().asInstanceOf[MyRandom]
+      } finally {
+        ois.close()
+      }
+    } else {
+      MyRandom(123) // Provide initial seed if file doesn't exist
+    }
   }
 
   def updateSeedInFile(filename: String, newSeed: MyRandom): Unit = {

@@ -36,7 +36,7 @@ object UtilFunctions {
   //Todo: if a player wants p.e: 4 words , and 2 of them are repeated, the game will only have 3 words
    */
 
-  def getWordsAndCoords(filename: String, n: Int , boardSize: Int): (List[String], List[List[Coord2D]]) = {
+  def getWordsAndCoords(filename: String, n: Int, boardSize: Int): (List[String], List[List[Coord2D]]) = {
     val lines = Source.fromFile(filename).getLines().toList
     val r = myRandomGenerator()
 
@@ -46,36 +46,22 @@ object UtilFunctions {
       val coordStrings = info(1).split('_') // retira as coordenadas
       val coords = coordStrings.map { coordString =>
         val numbers = coordString.stripPrefix("(").stripSuffix(")").split(',')
-        (numbers(0).toInt,numbers(1).toInt)
+        (numbers(0).toInt, numbers(1).toInt)
       }.toList
       (word, coords)
     }
 
-    // checks if there is no coordinates greater than boardSize[for not having incomplete words or words out of bounds]
+    // Filtra as linhas para garantir que todas as coordenadas estejam dentro dos limites do tabuleiro
     val filteredLines = lines.filter { line =>
       val (_, coords) = parseLine(line)
-      !coords.exists(coord => coord._1 >= boardSize && coord._2 >= boardSize)
+      !coords.exists(coord => coord._1 >= boardSize || coord._2 >= boardSize)
     }
 
-    def shuffleLines(lines: List[String], usedCoords: Set[Coord2D] = Set()): List[String] = {
-      if (lines.isEmpty || usedCoords.size == n) {
-        List()
-      } else {
-        val line = r.shuffle(lines).head
-        val (_, coords) = parseLine(line)
-        if (coords.exists(usedCoords.contains)) {
-          shuffleLines(lines.filterNot(_ == line), usedCoords)
-        } else {
-          line :: shuffleLines(lines.filterNot(_ == line), usedCoords ++ coords)
-        }
-      }
-    }
-    /*
-    val randomLines = r.shuffle(lines)
-    val wordsAndCoords = randomLines.map(parseLine).take(n)
-    */
-    val randomLines = shuffleLines(filteredLines)
-    val wordsAndCoords = randomLines.map(parseLine).take(n)
+    // Embaralha as linhas filtradas
+    val shuffledLines = r.shuffle(filteredLines)
+
+    // Coleta as primeiras `n` palavras e suas coordenadas
+    val wordsAndCoords = shuffledLines.map(parseLine).take(n)
     val (words, coordLists) = wordsAndCoords.unzip
     (words, coordLists)
   }
