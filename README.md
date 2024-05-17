@@ -25,7 +25,7 @@ The main class file for the GUI controller is:
 ## How to Run
 1. Ensure you have Java and Scala installed on your machine.
 2. Set up JavaFX library in your project.
-3 .Compile and run the application using your preferred IDE or build tool (e.g., sbt, IntelliJ IDEA).
+3. Compile and run the application using your preferred IDE or build tool (e.g., sbt, IntelliJ IDEA).
 
 ## Methods in the Controller.scala
 ### Fields
