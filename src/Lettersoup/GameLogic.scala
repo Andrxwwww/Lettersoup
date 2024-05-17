@@ -131,7 +131,16 @@ object GameLogic {
         val result = checkWord(head) // check the current word
         //println(s"Word '$head' appears ${countWordInBoard(board, head)} times in the board")
         result && checkAllWords(tail)
-        countWordInBoard(board, head) == 1
+        if (countWordInBoard(board, head) == 1) {
+          var newWordList = words.filterNot(_ == head)
+          if (newWordList.isEmpty) {
+            true
+          } else {
+            checkAllWords(newWordList)
+          }
+        } else {
+          false
+        }
     }
 
     val allWordsCanBePlayed = checkAllWords(wordsToFind)

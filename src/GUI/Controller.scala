@@ -1,18 +1,16 @@
 package GUI
 
-import GUI.FxApp.{gameHistory, startTimer}
+import GUI.FxApp.{gameHistory, gameState, numWords, startTimer}
 import javafx.fxml.FXML
 import javafx.scene.layout.{AnchorPane, GridPane, Pane}
 import javafx.stage.Stage
 import Lettersoup.Utils.{Board, Coord2D}
-import Random.SeedGenerator.myRandomGenerator
-import Lettersoup.GameLogic.{checkBoard, completeBoardRandomly, play, setBoardWithWords}
-import Lettersoup.UtilFunctions.{getWordsAndCoords, randomCharNotInList}
+import Lettersoup.GameLogic.{checkBoard, play}
 import Lettersoup.Utils.Direction.{Direction, coordToDirection, directionToString}
+import javafx.scene.Parent
 import javafx.scene.control.{Button, ColorPicker, Label, TextField}
-import javafx.scene.paint.Color
 
-import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
+import scala.util.Try
 
 class Controller {
   @FXML var mainMenuPane: AnchorPane = _
@@ -24,12 +22,10 @@ class Controller {
   @FXML var boardFailedPop: Pane = _
   @FXML var bgColorPicker: ColorPicker = _
   @FXML var scoreID: Label = _
+  @FXML var numWordField: TextField = _
+  @FXML var numOfWordsPane: Pane = _
+  @FXML var numOfWordsPaneAnchor: AnchorPane = _
 
-  var rand = myRandomGenerator()
-  var board = List.fill(5, 5)('-')
-  var infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", 1, board.length)
-  var boardWithWordsGUI = setBoardWithWords(board, infos._1, infos._2)
-  var gameBoardGUI = completeBoardRandomly(boardWithWordsGUI, rand, randomCharNotInList(infos._1))._1
 
   // --> SHOWING PANES
   def showSettings(): Unit = {
@@ -38,6 +34,8 @@ class Controller {
     gamePane.setVisible(false)
     winGame.setVisible(false)
     boardFailedPop.setVisible(false)
+    numOfWordsPane.setVisible(false)
+    numOfWordsPaneAnchor.setVisible(false)
   }
 
   def showMainMenu():  Unit = {
@@ -46,6 +44,8 @@ class Controller {
     gamePane.setVisible(false)
     winGame.setVisible(false)
     boardFailedPop.setVisible(false)
+    numOfWordsPane.setVisible(false)
+    numOfWordsPaneAnchor.setVisible(false)
     handleReset()
   }
 
@@ -55,6 +55,8 @@ class Controller {
     gamePane.setVisible(true)
     winGame.setVisible(false)
     boardFailedPop.setVisible(false)
+    numOfWordsPane.setVisible(false)
+    numOfWordsPaneAnchor.setVisible(false)
   }
 
   def showWinGame(): Unit = {
@@ -63,14 +65,28 @@ class Controller {
     gamePane.setVisible(true)
     winGame.setVisible(true)
     boardFailedPop.setVisible(false)
+    numOfWordsPane.setVisible(false)
+    numOfWordsPaneAnchor.setVisible(false)
   }
 
   def showFailedLoad(): Unit = {
     settingsPane.setVisible(false)
     mainMenuPane.setVisible(false)
-    gamePane.setVisible(true)
+    gamePane.setVisible(false)
     winGame.setVisible(false)
     boardFailedPop.setVisible(true)
+    numOfWordsPane.setVisible(false)
+    numOfWordsPaneAnchor.setVisible(true)
+  }
+
+  def showNumOfWords(): Unit = {
+    settingsPane.setVisible(false)
+    mainMenuPane.setVisible(false)
+    gamePane.setVisible(false)
+    winGame.setVisible(false)
+    boardFailedPop.setVisible(false)
+    numOfWordsPane.setVisible(true)
+    numOfWordsPaneAnchor.setVisible(true)
   }
 
   //--> MAINMENU ACTIONS
@@ -83,41 +99,82 @@ class Controller {
   @FXML
   def handlePlayButton(): Unit = {
     startTimer = System.currentTimeMillis()
-    showGame()
-    handleReset()
-    updateGrid(gameBoardGUI, infos._1 )
+    showNumOfWords()
   }
+
+  @FXML
+  def handleInsertWords(): Unit = {
+
+    val buttonForStartGame = getButtons(numOfWordsPane)
+    val buttonClicked = buttonForStartGame.find(_.isHover)
+
+    buttonClicked match {
+      case Some(button) => button.getText() match {
+        case "Start" =>
+          canConvertToInt(numWordField.getText) match {
+            case true =>
+              numWords = numWordField.getText.toInt
+              if (numWords > 0 && numWords <= 9) {
+                showGame()
+                createNewGame(numWords)
+              } else {
+                //System.out.println("Invalid number of words")
+              }
+            case false => showFailedLoad()
+              //System.out.println("Invalid input")
+          }
+      }
+    }
+  }
+
+  def canConvertToInt(s: String): Boolean = Try(s.toInt).isSuccess
 
   //--> GAME ACTIONS
   @FXML
   def handleGamePlayButton(): Unit = {
-    if( play(gameBoardGUI, formWord()  , gameHistory.head._2, firstDirection()) && infos._1.contains(formWord() )){
-      System.out.println("Word found")
-      val endTimer = System.currentTimeMillis()
-      // assim quanto mais rapido mais pontos
-      val score = 100000 - (endTimer - startTimer).toInt
-      scoreID.setText(score.toString)
-      showWinGame()
-    } else {
-      System.out.println("Word not found")
-      handleReset()
-      wordVisualize.setText("Wrong word :(")
+    var words = gameState.getWords
+
+    gameHistory.headOption match {
+      case Some(head) =>
+        if (play(gameState.getGameBoard, formWord(), head._2, firstDirection()) && words.contains(formWord())) {
+          val wordsToFind = words.filterNot(_ == formWord())
+          if (wordsToFind.isEmpty) {
+            System.out.println("All words found")
+            val endTimer = System.currentTimeMillis()
+            val score = 100000 - (endTimer - startTimer).toInt
+            scoreID.setText(score.toString)
+            showWinGame()
+          } else {
+
+            System.out.println("Word found")
+            gameState.updateWords(wordsToFind)
+            handleReset()
+            wordVisualize.setText("Word found")
+          }
+        } else {
+
+          System.out.println("Word not found")
+          handleReset()  // Reset game state if necessary
+          wordVisualize.setText("Wrong word :(")
+        }
+      case None =>
+        System.out.println("No game history available, cannot proceed.")
     }
   }
 
   @FXML
   def handleRepeatGame(): Unit = {
-    val buttonsWGamePop = winGame.getChildren().stream()
-      .filter(_.isInstanceOf[Button]).toArray().map(_.asInstanceOf[Button])
+    val buttonsWGamePop = getButtons(winGame)
     val buttonClicked = buttonsWGamePop.find(_.isHover)
 
     buttonClicked match {
       case Some(button) => button.getText() match {
         case "Yes" =>
           startTimer = System.currentTimeMillis()
-          createNewGame()
+          showGame()
+          createNewGame(numWords)
         case "No" =>
-          createNewGame()
+          createNewGame(numWords)
           showMainMenu()
       }
     }
@@ -126,8 +183,7 @@ class Controller {
 
   @FXML
   def handleGameFailedLoad(): Unit = {
-    val buttonsForRetryGame = boardFailedPop.getChildren().stream()
-      .filter(_.isInstanceOf[Button]).toArray().map(_.asInstanceOf[Button])
+    val buttonsForRetryGame = getButtons(boardFailedPop)
     val buttonClicked = buttonsForRetryGame.find(_.isHover)
 
     buttonClicked match {
@@ -153,7 +209,8 @@ class Controller {
         }
       }
     } else {
-      System.out.println("Game Not Loaded Correctly :(")
+      //System.out.println("Game Not Loaded Correctly :(")
+      showFailedLoad()
     }
   }
 
@@ -162,10 +219,17 @@ class Controller {
     val coord = row * 5 + col + 1
     val buttonId = s"Button$coord"
 
-    val children = gamegrid.getChildren()
-    children.collectFirst {
-      case btn: Button if btn.getId == buttonId => btn
+    val children = gamegrid.getChildren()  // This returns a JavaFX ObservableList[Node]
+
+    def findRecursive(index: Int): Option[Button] = {
+      if (index >= children.size()) None
+      else children.get(index) match {
+        case btn: Button if btn.getId == buttonId => Some(btn)
+        case _ => findRecursive(index + 1)
+      }
     }
+
+    findRecursive(0)
   }
 
   def undoLastSelection(): Unit = {
@@ -179,12 +243,12 @@ class Controller {
           gameHistory = gameHistory.init
           wordVisualize.setText(formWord())
 
-          System.out.println(s"Undo last selection: ${lastSelectedButtonInfo._1}, row: ${lastSelectedButtonInfo._2._1}, col: ${lastSelectedButtonInfo._2._2}")
+          //System.out.println(s"Undo last selection: ${lastSelectedButtonInfo._1}, row: ${lastSelectedButtonInfo._2._1}, col: ${lastSelectedButtonInfo._2._2}")
         case None =>
-          System.out.println("Button not found")
+          //System.out.println("Button not found")
       }
     } else {
-      System.out.println("No selection to undo")
+      //System.out.println("No selection to undo")
     }
   }
 
@@ -206,20 +270,19 @@ class Controller {
       var word = formWord()
       var firstDir = directionToString(firstDirection())
       wordVisualize.setText(word)
-      System.out.println(s"-fx-background-color: $color; -fx-border-color: #000000;")
-      System.out.println(s"gameHistory: $gameHistory")
-      System.out.println(s"Button clicked: $buttonChar, x: $row, y: $col")
-      System.out.println(s"firstDir: $firstDir")
-      System.out.println(s"word: $word")
+      //System.out.println(s"-fx-background-color: $color; -fx-border-color: #000000;")
+      //System.out.println(s"gameHistory: $gameHistory")
+      //System.out.println(s"Button clicked: $buttonChar, x: $row, y: $col")
+      //System.out.println(s"firstDir: $firstDir")
+      //System.out.println(s"word: $word")
     } else {
-      System.out.println("Invalid move")
+      //System.out.println("Invalid move")
     }
     currentSelection
   }
 
   def getButtonWhenHover(): Button={
-    val buttons = gamegrid.getChildren().stream()
-      .filter(_.isInstanceOf[Button]).toArray().map(_.asInstanceOf[Button])
+    val buttons = getButtons(gamegrid)
     val buttonClicked = buttons.filter(_.isHover).head
     buttonClicked
   }
@@ -269,22 +332,24 @@ class Controller {
     }
   }
 
-  def createNewGame(): Unit = {
-    rand = myRandomGenerator()
-    board = List.fill(5, 5)('-')
-    infos = getWordsAndCoords("src/Lettersoup/Palavras.txt", 1, board.length)
-    boardWithWordsGUI = setBoardWithWords(board, infos._1, infos._2)
-    gameBoardGUI = completeBoardRandomly(boardWithWordsGUI, rand, randomCharNotInList(infos._1))._1
-    updateGrid(gameBoardGUI, infos._1)
+  def createNewGame(n: Int): Unit = {
+    gameState.reset(n)
+    updateGrid(gameState.getGameBoard, gameState.getWords)
     handleReset()
-    showGame()
   }
 
   def handleReset(): Unit = {
-    val buttons = gamegrid.getChildren().stream().filter(_.isInstanceOf[Button]).toArray().map(_.asInstanceOf[Button])
+    val buttons = getButtons(gamegrid)
     gameHistory = List()
     wordVisualize.setText("")
     buttons.map(_.setStyle("-fx-background-color: #DDDDDD; -fx-border-color: #000000;"))
+  }
+
+  def getButtons(parent: Parent): Array[Button] = {
+    parent.getChildrenUnmodifiable.stream()
+      .filter(_.isInstanceOf[Button])
+      .toArray
+      .map(_.asInstanceOf[Button])
   }
 
   //--> SETTINGS ACTIONS

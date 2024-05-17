@@ -33,8 +33,7 @@ object UtilFunctions {
             usedCoords -> set of coordinates that are already used
   description: checks if there is no coordinates repeated [for not superimpose words]
   - return: a list of lines shuffled
-  //Todo: if a player wants p.e: 4 words , and 2 of them are repeated, the game will only have 3 words
-   */
+     */
 
   def getWordsAndCoords(filename: String, n: Int, boardSize: Int): (List[String], List[List[Coord2D]]) = {
     val lines = Source.fromFile(filename).getLines().toList
@@ -92,7 +91,7 @@ object UtilFunctions {
   def countWordInBoard(board: Board, word: String): Int = {
     val directions = Direction.values.toList
 
-    def searchWord(x: Int, y: Int, index: Int, visited: Set[(Int, Int)]): Int = {
+    def searchWord(x: Int, y: Int, index: Int, visited: Set[Coord2D]): Int = {
       if (index == word.length) 1
       else {
         directions.map { dir =>
@@ -107,6 +106,7 @@ object UtilFunctions {
       }
     }
 
+    // aplicacao no board
     val results = board.indices.flatMap { row =>
       board.head.indices.flatMap { col =>
         if (board(row)(col) == word.head) Some(searchWord(row, col, 1, Set((row, col))))

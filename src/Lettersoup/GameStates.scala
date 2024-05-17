@@ -67,7 +67,7 @@ object GameStates {
       runGame(gameBoard, infos._1, wordsFound, startTimer)
     } else {
       println("The game not loaded correctly :(")
-      startGame()
+      loadGame()
     }
   }
 
@@ -107,7 +107,7 @@ object GameStates {
     }
   }
 
-
+  //TUIA - function that restarts the game
   def restartGame(): Unit = {
     println("Do you want to play again? (y/n)")
     val playAgain = scala.io.StdIn.readLine()
@@ -118,6 +118,7 @@ object GameStates {
     }
   }
 
+  //TUIA - function that loads the settings
   private def loadSettings(): Unit = {
     println(" ")
     println("1. Change the color of the words")
@@ -143,6 +144,7 @@ object GameStates {
     }
   }
 
+  //TUIA - function that changes the color of the console
   def changeConsoleColor(color: String): Unit = {
     val colorCode = color.toLowerCase match {
       case "red" => "\u001B[31m"
