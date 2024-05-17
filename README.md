@@ -1,6 +1,7 @@
 # Lettersoup Game 
-MainMenu                                                                                                Game
-![image](https://github.com/Andrxwwww/Lettersoup/assets/117539407/01196654-9890-41ca-b949-bfa2db0dd687) ![image](https://github.com/Andrxwwww/Lettersoup/assets/117539407/deb664ff-977d-4a5d-843c-09b42cb09917)
+MainMenu                                                                                                 |  Game
+:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:
+![image](https://github.com/Andrxwwww/Lettersoup/assets/117539407/01196654-9890-41ca-b949-bfa2db0dd687)  |  ![image](https://github.com/Andrxwwww/Lettersoup/assets/117539407/deb664ff-977d-4a5d-843c-09b42cb09917)
 
 ## Overview
 This project was programmed using scala language
